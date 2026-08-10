@@ -1,2 +1,2 @@
-# Clac
+# Calc
 A Calculator 
