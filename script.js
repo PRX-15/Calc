@@ -104,6 +104,8 @@ function render(
 
         savedCursorStart = start;
         savedCursorEnd = end;
+
+    updateLiveResult();
     }
 }
 
