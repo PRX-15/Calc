@@ -648,67 +648,51 @@ function updateLiveResult() {
 
 function calculate() {
 
-    if (!expression) {
+    if (!expression || expression === "Error") {
         return;
     }
 
     vibrate(25);
 
-    const original =
-        expression;
-
+    const original = expression;
 
     try {
 
-        if (
-            /[+\-*/.(]$/.test(expression)
-        ) {
-            throw new Error(
-                "Incomplete expression"
-            );
+        if (/[+\-*/.(]$/.test(expression)) {
+            return;
         }
 
+        const tokens = tokenize(expression);
 
-        const tokens =
-            tokenize(expression);
+        const result = evaluate(tokens);
 
-
-        const result =
-            evaluate(tokens);
-
-
-        if (
-            !Number.isFinite(result)
-        ) {
-            throw new Error();
+        if (!Number.isFinite(result)) {
+            return;
         }
-
 
         const cleanResult =
-            Number(
-                result.toPrecision(12)
-            );
-
+            Number(result.toPrecision(12));
 
         expressionPreview.textContent =
             original + " =";
 
-
         expression =
             String(cleanResult);
 
-
         justCalculated = true;
 
-
-        addHistory(
-            original,
-            cleanResult
-        );
-
+        // History should NEVER be allowed
+        // to break the calculator.
+        try {
+            addHistory(original, cleanResult);
+        } catch (historyError) {
+            console.error(
+                "History error:",
+                historyError
+            );
+        }
 
         render();
-
 
         display.classList.remove(
             "result-animation"
@@ -720,14 +704,18 @@ function calculate() {
             "result-animation"
         );
 
-    }
+    } catch (error) {
 
-    catch {
+        console.error(
+            "Calculator error:",
+            error
+        );
 
         expressionPreview.textContent =
             original;
 
-        expression = "Error";
+        expression =
+            "Error";
 
         justCalculated = true;
 
@@ -863,10 +851,21 @@ function addHistory(
 
 function saveHistory() {
 
-    localStorage.setItem(
-        "calcHistory",
-        JSON.stringify(history)
-    );
+    try {
+
+        localStorage.setItem(
+            "calcHistory",
+            JSON.stringify(history)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not save history:",
+            error
+        );
+
+    }
 }
 
 
