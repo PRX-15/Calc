@@ -4,6 +4,8 @@
 
 const display = document.getElementById("display");
 const expressionPreview = document.getElementById("expressionPreview");
+const liveResult =
+    document.getElementById("liveResult");
 
 const themeButton = document.getElementById("themeButton");
 const historyButton = document.getElementById("historyButton");
