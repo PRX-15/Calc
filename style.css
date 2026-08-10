@@ -537,3 +537,35 @@ header {
         border-radius: 17px;
     }
 }
+
+/* ================================
+   LIVE CALCULATION RESULT
+================================ */
+
+.live-result {
+    min-height: 26px;
+    margin-top: 4px;
+
+    color: var(--accent);
+
+    font-size: 22px;
+    font-weight: 650;
+
+    text-align: right;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    opacity: 0;
+    transform: translateY(-3px);
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+.live-result.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
