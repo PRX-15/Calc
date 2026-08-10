@@ -18,6 +18,22 @@ const clearHistoryButton = document.getElementById("clearHistory");
 let expression = "";
 let justCalculated = false;
 
+let history = [];
+
+try {
+    history =
+        JSON.parse(
+            localStorage.getItem("calcHistory") || "[]"
+        );
+
+    if (!Array.isArray(history)) {
+        history = [];
+    }
+
+} catch {
+    history = [];
+}
+
 // ================================
 // MOBILE CARET / CURSOR SUPPORT
 // ================================
