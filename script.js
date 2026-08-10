@@ -16,6 +16,18 @@ const clearHistoryButton = document.getElementById("clearHistory");
 let expression = "";
 let justCalculated = false;
 
+// ================================
+// MOBILE CARET / CURSOR SUPPORT
+// ================================
+
+display.addEventListener("pointerdown", () => {
+
+    // Allow the browser to place the caret naturally.
+    display.focus();
+
+});
+
+
 let history = JSON.parse(
     localStorage.getItem("calcHistory") || "[]"
 );
@@ -26,7 +38,31 @@ let history = JSON.parse(
 // ================================
 
 function render() {
-    display.value = expression || "0";
+
+    const oldStart = display.selectionStart;
+    const oldEnd = display.selectionEnd;
+
+    display.value =
+        expression || "0";
+
+
+    // Keep the cursor where the user was editing.
+    if (
+        document.activeElement === display &&
+        oldStart !== null
+    ) {
+
+        const position =
+            Math.min(
+                oldStart,
+                display.value.length
+            );
+
+        display.setSelectionRange(
+            position,
+            position
+        );
+    }
 }
 
 
@@ -49,66 +85,50 @@ function append(value) {
 
     vibrate();
 
-    // If a result was just calculated:
-    // typing a number starts a new calculation.
+    display.focus();
+
+
+    // If result was just calculated,
+    // start fresh when entering a number.
     if (
         justCalculated &&
         !["+", "-", "*", "/"].includes(value)
     ) {
+
         expression = "";
-    }
+        justCalculated = false;
 
-    justCalculated = false;
-
-    const operators = ["+", "-", "*", "/"];
-    const last = expression.slice(-1);
-
-
-    // Prevent two operators together.
-    if (
-        operators.includes(value) &&
-        operators.includes(last)
-    ) {
-        expression =
-            expression.slice(0, -1) + value;
-
-        render();
-        return;
+        display.value = "";
     }
 
 
-    // Don't start with an operator except minus.
-    if (
-        expression === "" &&
-        operators.includes(value) &&
-        value !== "-"
-    ) {
-        return;
-    }
+    const start =
+        display.selectionStart ?? expression.length;
+
+    const end =
+        display.selectionEnd ?? start;
 
 
-    // Decimal handling.
-    if (value === ".") {
+    // Insert at cursor.
+    expression =
+        expression.slice(0, start) +
+        value +
+        expression.slice(end);
 
-        const currentNumber =
-            expression.split(/[+\-*/]/).pop();
-
-        if (currentNumber.includes(".")) {
-            return;
-        }
-
-        if (
-            currentNumber === "" ||
-            currentNumber === "-"
-        ) {
-            expression += "0";
-        }
-    }
-
-
-    expression += value;
 
     render();
+
+
+    // Put cursor immediately after
+    // the newly inserted character.
+    const newPosition =
+        start + value.length;
+
+
+    display.setSelectionRange(
+        newPosition,
+        newPosition
+    );
 }
 
 
@@ -137,12 +157,53 @@ function deleteLast() {
 
     vibrate();
 
-    expression =
-        expression.slice(0, -1);
+    display.focus();
 
-    justCalculated = false;
 
-    render();
+    const start =
+        display.selectionStart ?? expression.length;
+
+    const end =
+        display.selectionEnd ?? start;
+
+
+    // If something is selected,
+    // delete the selected section.
+    if (start !== end) {
+
+        expression =
+            expression.slice(0, start) +
+            expression.slice(end);
+
+
+        render();
+
+        display.setSelectionRange(
+            start,
+            start
+        );
+
+        return;
+    }
+
+
+    // Nothing selected → delete
+    // character immediately before cursor.
+    if (start > 0) {
+
+        expression =
+            expression.slice(0, start - 1) +
+            expression.slice(start);
+
+
+        render();
+
+
+        display.setSelectionRange(
+            start - 1,
+            start - 1
+        );
+    }
 }
 
 
