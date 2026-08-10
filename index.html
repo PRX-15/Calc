@@ -1,41 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Calc</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="calculator">
-    <input type="text" id="display" readonly>
+<div class="app">
 
-    <div class="buttons">
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="deleteLast()">⌫</button>
-        <button onclick="append('/')">÷</button>
-        <button onclick="append('*')">×</button>
+    <header>
+        <h1>Calc</h1>
 
-        <button onclick="append('7')">7</button>
-        <button onclick="append('8')">8</button>
-        <button onclick="append('9')">9</button>
-        <button onclick="append('-')">−</button>
+        <div class="header-buttons">
+            <button class="icon-button" id="themeButton" aria-label="Toggle theme">
+                ☀️
+            </button>
 
-        <button onclick="append('4')">4</button>
-        <button onclick="append('5')">5</button>
-        <button onclick="append('6')">6</button>
-        <button onclick="append('+')">+</button>
+            <button class="icon-button" id="historyButton" aria-label="Calculation history">
+                🕘
+            </button>
+        </div>
+    </header>
 
-        <button onclick="append('1')">1</button>
-        <button onclick="append('2')">2</button>
-        <button onclick="append('3')">3</button>
-        <button onclick="calculate()">=</button>
 
-        <button onclick="append('0')" class="zero">0</button>
-        <button onclick="append('.')">.</button>
-    </div>
+    <main class="calculator">
+
+        <div class="display-container">
+            <div id="expressionPreview"></div>
+            <input
+                type="text"
+                id="display"
+                readonly
+                inputmode="none"
+                aria-label="Calculator display"
+            >
+        </div>
+
+
+        <div class="buttons">
+
+            <button class="special" onclick="clearDisplay()">C</button>
+            <button class="special" onclick="deleteLast()">⌫</button>
+            <button class="operator" onclick="append('/')">÷</button>
+            <button class="operator" onclick="append('*')">×</button>
+
+            <button onclick="append('7')">7</button>
+            <button onclick="append('8')">8</button>
+            <button onclick="append('9')">9</button>
+            <button class="operator" onclick="append('-')">−</button>
+
+            <button onclick="append('4')">4</button>
+            <button onclick="append('5')">5</button>
+            <button onclick="append('6')">6</button>
+            <button class="operator" onclick="append('+')">+</button>
+
+            <button onclick="append('1')">1</button>
+            <button onclick="append('2')">2</button>
+            <button onclick="append('3')">3</button>
+            <button class="equals" onclick="calculate()">=</button>
+
+            <button class="zero" onclick="append('0')">0</button>
+            <button onclick="append('.')">.</button>
+
+        </div>
+
+    </main>
+
 </div>
 
+
+<!-- History panel -->
+
+<div class="overlay" id="historyOverlay">
+
+    <div class="history-panel">
+
+        <div class="panel-header">
+            <h2>History</h2>
+
+            <button class="close-button" id="closeHistory">
+                ✕
+            </button>
+        </div>
+
+        <div id="historyList">
+            <p class="empty-history">No calculations yet.</p>
+        </div>
+
+        <button class="clear-history" id="clearHistory">
+            Clear history
+        </button>
+
+    </div>
+
+</div>
+
+
 <script src="script.js"></script>
+
 </body>
 </html>
