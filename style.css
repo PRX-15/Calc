@@ -1,16 +1,27 @@
-body {
+* {
+    box-sizing: border-box;
     margin: 0;
-    height: 100vh;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #111;
     font-family: Arial, sans-serif;
+    padding: 16px;
 }
 
 .calculator {
-    width: 300px;
-    padding: 20px;
+    width: min(100%, 320px);
+    padding: 16px;
     background: #222;
     border-radius: 20px;
 }
@@ -18,13 +29,14 @@ body {
 #display {
     width: 100%;
     height: 70px;
-    box-sizing: border-box;
     margin-bottom: 15px;
-    font-size: 30px;
+    font-size: 32px;
     text-align: right;
     padding: 10px;
     border: none;
     border-radius: 10px;
+    background: #333;
+    color: white;
 }
 
 .buttons {
@@ -39,6 +51,8 @@ button {
     border: none;
     border-radius: 12px;
     cursor: pointer;
+    background: #555;
+    color: white;
 }
 
 button:active {
