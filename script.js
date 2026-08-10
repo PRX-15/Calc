@@ -147,77 +147,136 @@ function deleteLast() {
 
 
 // ================================
-// SAFE MATH PARSER
+// MATH PARSER
+// () → × ÷ → + −
 // ================================
 
 function tokenize(input) {
-
     const tokens = [];
-
     let number = "";
 
-    for (let i = 0; i < input.length; i++) {
+    for (const char of input) {
 
-        const char = input[i];
-
-        if (
-            /[0-9.]/.test(char)
-        ) {
+        if (/[0-9.]/.test(char)) {
             number += char;
             continue;
         }
 
-        if (
-            ["+", "-", "*", "/"].includes(char)
-        ) {
+        if (number) {
+            const n = Number(number);
 
-            if (number !== "") {
-
-                tokens.push(
-                    Number(number)
-                );
-
-                number = "";
+            if (!Number.isFinite(n)) {
+                throw new Error("Invalid number");
             }
 
+            tokens.push(n);
+            number = "";
+        }
+
+        if (["+", "-", "*", "/", "(", ")"].includes(char)) {
             tokens.push(char);
+        }
+        else {
+            throw new Error("Invalid character");
         }
     }
 
-    if (number !== "") {
-        tokens.push(Number(number));
+    if (number) {
+        const n = Number(number);
+
+        if (!Number.isFinite(n)) {
+            throw new Error("Invalid number");
+        }
+
+        tokens.push(n);
     }
 
     return tokens;
 }
 
 
-// ================================
-// OPERATOR PRECEDENCE
-// ================================
-
 function evaluate(tokens) {
 
-    // First: × and ÷
-    for (let i = 0; i < tokens.length; i++) {
+    let position = 0;
 
-        if (
-            tokens[i] === "*" ||
-            tokens[i] === "/"
-        ) {
 
-            const left = tokens[i - 1];
-            const right = tokens[i + 1];
+    // ----------------------------
+    // Numbers + parentheses
+    // ----------------------------
 
-            if (
-                typeof left !== "number" ||
-                typeof right !== "number"
-            ) {
-                throw new Error();
+    function primary() {
+
+        const token = tokens[position];
+
+
+        // Negative number
+        if (token === "-") {
+            position++;
+            return -primary();
+        }
+
+
+        // (
+        if (token === "(") {
+
+            position++;
+
+            const value =
+                parseExpression();
+
+            if (tokens[position] !== ")") {
+                throw new Error(
+                    "Missing )"
+                );
             }
 
+            position++;
+
+            return value;
+        }
+
+
+        // Number
+        if (typeof token === "number") {
+
+            position++;
+
+            return token;
+        }
+
+
+        throw new Error(
+            "Invalid expression"
+        );
+    }
+
+
+    // ----------------------------
+    // × ÷
+    // ----------------------------
+
+    function parseTerm() {
+
+        let value =
+            primary();
+
+
+        while (
+            tokens[position] === "*" ||
+            tokens[position] === "/"
+        ) {
+
+            const operator =
+                tokens[position];
+
+            position++;
+
+            const right =
+                primary();
+
+
             if (
-                tokens[i] === "/" &&
+                operator === "/" &&
                 right === 0
             ) {
                 throw new Error(
@@ -225,52 +284,67 @@ function evaluate(tokens) {
                 );
             }
 
-            const result =
-                tokens[i] === "*"
-                    ? left * right
-                    : left / right;
 
-            tokens.splice(
-                i - 1,
-                3,
-                result
-            );
-
-            i -= 2;
+            if (operator === "*") {
+                value *= right;
+            }
+            else {
+                value /= right;
+            }
         }
+
+        return value;
     }
 
 
-    // Then: + and -
-    let result = tokens[0];
+    // ----------------------------
+    // + −
+    // ----------------------------
 
-    for (
-        let i = 1;
-        i < tokens.length;
-        i += 2
-    ) {
+    function parseExpression() {
 
-        const operator = tokens[i];
-        const number = tokens[i + 1];
+        let value =
+            parseTerm();
 
-        if (
-            typeof number !== "number"
+
+        while (
+            tokens[position] === "+" ||
+            tokens[position] === "-"
         ) {
-            throw new Error();
+
+            const operator =
+                tokens[position];
+
+            position++;
+
+            const right =
+                parseTerm();
+
+
+            if (operator === "+") {
+                value += right;
+            }
+            else {
+                value -= right;
+            }
         }
 
-        if (operator === "+") {
-            result += number;
-        }
-
-        else if (operator === "-") {
-            result -= number;
-        }
-
-        else {
-            throw new Error();
-        }
+        return value;
     }
+
+
+    const result =
+        parseExpression();
+
+
+    if (
+        position !== tokens.length
+    ) {
+        throw new Error(
+            "Invalid expression"
+        );
+    }
+
 
     return result;
 }
@@ -291,27 +365,25 @@ function calculate() {
     const original =
         expression;
 
+
     try {
 
-        // Don't calculate incomplete expressions.
         if (
-            /[+\-*/.]$/.test(expression)
+            /[+\-*/.(]$/.test(expression)
         ) {
-            return;
+            throw new Error(
+                "Incomplete expression"
+            );
         }
+
 
         const tokens =
             tokenize(expression);
 
-        if (
-            tokens.length === 0 ||
-            typeof tokens[0] !== "number"
-        ) {
-            throw new Error();
-        }
 
         const result =
             evaluate(tokens);
+
 
         if (
             !Number.isFinite(result)
@@ -320,26 +392,31 @@ function calculate() {
         }
 
 
-        // Keep results readable.
         const cleanResult =
             Number(
                 result.toPrecision(12)
             );
 
+
         expressionPreview.textContent =
             original + " =";
+
 
         expression =
             String(cleanResult);
 
+
         justCalculated = true;
+
 
         addHistory(
             original,
             cleanResult
         );
 
+
         render();
+
 
         display.classList.remove(
             "result-animation"
@@ -365,8 +442,6 @@ function calculate() {
         render();
     }
 }
-
-
 // ================================
 // PERCENTAGE
 // ================================
