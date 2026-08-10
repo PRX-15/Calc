@@ -1,15 +1,54 @@
 const display = document.getElementById("display");
+const expressionPreview = document.getElementById("expressionPreview");
+
+const historyButton = document.getElementById("historyButton");
+const historyOverlay = document.getElementById("historyOverlay");
+const closeHistory = document.getElementById("closeHistory");
+const historyList = document.getElementById("historyList");
+const clearHistoryButton = document.getElementById("clearHistory");
+
+const themeButton = document.getElementById("themeButton");
 
 let expression = "";
 let justCalculated = false;
+
+let history = JSON.parse(
+    localStorage.getItem("calculatorHistory") || "[]"
+);
+
+
+/* ============================= */
+/* DISPLAY */
+/* ============================= */
 
 function render() {
     display.value = expression;
 }
 
+
+/* ============================= */
+/* BUTTON FEEDBACK */
+/* ============================= */
+
+function buttonFeedback() {
+    if (navigator.vibrate) {
+        navigator.vibrate(8);
+    }
+}
+
+
+/* ============================= */
+/* APPEND */
+/* ============================= */
+
 function append(value) {
-    // After "=": typing a number starts a new calculation.
-    if (justCalculated && !["+", "-", "*", "/"].includes(value)) {
+
+    buttonFeedback();
+
+    if (
+        justCalculated &&
+        !["+", "-", "*", "/"].includes(value)
+    ) {
         expression = "";
     }
 
@@ -18,14 +57,22 @@ function append(value) {
     const operators = ["+", "-", "*", "/"];
     const lastChar = expression.slice(-1);
 
-    // Prevent two operators in a row.
-    if (operators.includes(value) && operators.includes(lastChar)) {
-        expression = expression.slice(0, -1) + value;
+
+    // Prevent consecutive operators
+    if (
+        operators.includes(value) &&
+        operators.includes(lastChar)
+    ) {
+        expression =
+            expression.slice(0, -1) + value;
     }
 
-    // Only allow one decimal point per number.
+
+    // Decimal handling
     else if (value === ".") {
-        const currentNumber = expression.split(/[+\-*/]/).pop();
+
+        const currentNumber =
+            expression.split(/[+\-*/]/).pop();
 
         if (currentNumber.includes(".")) {
             return;
@@ -34,6 +81,7 @@ function append(value) {
         expression += value;
     }
 
+
     else {
         expression += value;
     }
@@ -41,30 +89,67 @@ function append(value) {
     render();
 }
 
+
+/* ============================= */
+/* CLEAR */
+/* ============================= */
+
 function clearDisplay() {
+
+    buttonFeedback();
+
     expression = "";
     justCalculated = false;
+
+    expressionPreview.textContent = "";
+
     render();
 }
+
+
+/* ============================= */
+/* DELETE */
+/* ============================= */
 
 function deleteLast() {
-    expression = expression.slice(0, -1);
+
+    buttonFeedback();
+
+    expression =
+        expression.slice(0, -1);
+
     justCalculated = false;
+
     render();
 }
 
+
+/* ============================= */
+/* CALCULATE */
+/* ============================= */
+
 function calculate() {
+
     if (!expression) return;
 
-    // Don't calculate incomplete expressions.
-    if (/[+\-*/.]$/.test(expression)) return;
+    buttonFeedback();
+
+    if (/[+\-*/.]$/.test(expression)) {
+        return;
+    }
 
     try {
+
+        const originalExpression = expression;
+
         const tokens = expression.match(
             /(?:\d+(?:\.\d*)?|\.\d+)|[+\-*/]/g
         );
 
-        if (!tokens || tokens.join("") !== expression) {
+        if (
+            !tokens ||
+            tokens.join("") !== expression
+        ) {
             throw new Error();
         }
 
@@ -74,13 +159,23 @@ function calculate() {
             throw new Error();
         }
 
-        for (let i = 1; i < tokens.length; i += 2) {
+
+        for (
+            let i = 1;
+            i < tokens.length;
+            i += 2
+        ) {
+
             const operator = tokens[i];
-            const number = Number(tokens[i + 1]);
+
+            const number =
+                Number(tokens[i + 1]);
+
 
             if (!Number.isFinite(number)) {
                 throw new Error();
             }
+
 
             if (operator === "+") {
                 result += number;
@@ -95,68 +190,313 @@ function calculate() {
             }
 
             else if (operator === "/") {
+
                 if (number === 0) {
-                    throw new Error("Cannot divide by zero");
+                    throw new Error();
                 }
 
                 result /= number;
             }
         }
 
+
         if (!Number.isFinite(result)) {
             throw new Error();
         }
 
-        // Keep the result readable.
-        expression = String(Number(result.toPrecision(12)));
+
+        result =
+            Number(result.toPrecision(12));
+
+
+        expressionPreview.textContent =
+            originalExpression.replace(/\*/g, "×")
+                .replace(/\//g, "÷");
+
+
+        expression = String(result);
 
         justCalculated = true;
+
         render();
+
+        display.classList.remove("result-animation");
+
+        void display.offsetWidth;
+
+        display.classList.add("result-animation");
+
+
+        addHistory(
+            originalExpression,
+            String(result)
+        );
+
     }
 
     catch {
+
         expression = "Error";
+
         justCalculated = true;
+
         render();
     }
 }
 
 
-// ================================
-// KEYBOARD SUPPORT
-// ================================
+/* ============================= */
+/* HISTORY */
+/* ============================= */
 
-window.addEventListener("keydown", (event) => {
+function addHistory(expressionValue, result) {
 
-    const key = event.key;
+    history.unshift({
+        expression: expressionValue,
+        result: result
+    });
 
-    // Numbers + decimal
-    if (/^[0-9.]$/.test(key)) {
-        append(key);
+    // Keep latest 50
+    history = history.slice(0, 50);
+
+    localStorage.setItem(
+        "calculatorHistory",
+        JSON.stringify(history)
+    );
+
+    renderHistory();
+}
+
+
+function renderHistory() {
+
+    if (history.length === 0) {
+
+        historyList.innerHTML =
+            `<p class="empty-history">
+                No calculations yet.
+            </p>`;
+
+        return;
     }
 
-    // Operators
-    else if (["+", "-", "*", "/"].includes(key)) {
-        append(key);
+
+    historyList.innerHTML =
+        history.map((item, index) => {
+
+            const formattedExpression =
+                item.expression
+                    .replace(/\*/g, "×")
+                    .replace(/\//g, "÷");
+
+            return `
+                <div
+                    class="history-item"
+                    data-index="${index}"
+                >
+                    <div class="history-expression">
+                        ${formattedExpression}
+                    </div>
+
+                    <div class="history-result">
+                        = ${item.result}
+                    </div>
+                </div>
+            `;
+
+        }).join("");
+
+
+    document
+        .querySelectorAll(".history-item")
+        .forEach(item => {
+
+            item.addEventListener("click", () => {
+
+                const selected =
+                    history[item.dataset.index];
+
+                expression = selected.result;
+
+                justCalculated = true;
+
+                render();
+
+                closeHistoryPanel();
+            });
+        });
+}
+
+
+function openHistoryPanel() {
+
+    buttonFeedback();
+
+    renderHistory();
+
+    historyOverlay.classList.add("active");
+}
+
+
+function closeHistoryPanel() {
+
+    historyOverlay.classList.remove("active");
+}
+
+
+function clearHistory() {
+
+    buttonFeedback();
+
+    history = [];
+
+    localStorage.removeItem(
+        "calculatorHistory"
+    );
+
+    renderHistory();
+}
+
+
+/* ============================= */
+/* HISTORY EVENTS */
+/* ============================= */
+
+historyButton.addEventListener(
+    "click",
+    openHistoryPanel
+);
+
+closeHistory.addEventListener(
+    "click",
+    closeHistoryPanel
+);
+
+clearHistoryButton.addEventListener(
+    "click",
+    clearHistory
+);
+
+historyOverlay.addEventListener(
+    "click",
+    (event) => {
+
+        if (event.target === historyOverlay) {
+            closeHistoryPanel();
+        }
+
+    }
+);
+
+
+/* ============================= */
+/* THEME */
+/* ============================= */
+
+function loadTheme() {
+
+    const savedTheme =
+        localStorage.getItem("calculatorTheme");
+
+    if (savedTheme === "light") {
+
+        document.body.classList.add("light");
+
+        themeButton.textContent = "🌙";
     }
 
-    // Enter / =
-    else if (key === "Enter" || key === "=") {
-        event.preventDefault();
-        calculate();
+    else {
+
+        themeButton.textContent = "☀️";
     }
+}
 
-    // Backspace
-    else if (key === "Backspace") {
-        deleteLast();
+
+function toggleTheme() {
+
+    buttonFeedback();
+
+    document.body.classList.toggle("light");
+
+    const isLight =
+        document.body.classList.contains("light");
+
+
+    localStorage.setItem(
+        "calculatorTheme",
+        isLight ? "light" : "dark"
+    );
+
+
+    themeButton.textContent =
+        isLight ? "🌙" : "☀️";
+}
+
+
+themeButton.addEventListener(
+    "click",
+    toggleTheme
+);
+
+
+/* ============================= */
+/* KEYBOARD */
+/* ============================= */
+
+window.addEventListener(
+    "keydown",
+    (event) => {
+
+        const key = event.key;
+
+
+        if (/^[0-9.]$/.test(key)) {
+            append(key);
+        }
+
+
+        else if (
+            ["+", "-", "*", "/"].includes(key)
+        ) {
+            append(key);
+        }
+
+
+        else if (
+            key === "Enter" ||
+            key === "="
+        ) {
+
+            event.preventDefault();
+
+            calculate();
+        }
+
+
+        else if (key === "Backspace") {
+
+            event.preventDefault();
+
+            deleteLast();
+        }
+
+
+        else if (
+            key === "Escape" ||
+            key.toLowerCase() === "c"
+        ) {
+
+            clearDisplay();
+        }
+
     }
-
-    // Escape / C
-    else if (key === "Escape" || key.toLowerCase() === "c") {
-        clearDisplay();
-    }
-});
+);
 
 
-// Initial display
+/* ============================= */
+/* START */
+/* ============================= */
+
+renderHistory();
+loadTheme();
 render();
