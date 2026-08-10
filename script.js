@@ -492,6 +492,139 @@ function evaluate(tokens) {
     return result;
 }
 
+// ================================
+// LIVE CALCULATION
+// ================================
+
+function updateLiveResult() {
+
+    // Nothing to calculate.
+    if (
+        !expression ||
+        expression === "Error" ||
+        justCalculated
+    ) {
+
+        liveResult.textContent = "";
+
+        liveResult.classList.remove(
+            "visible"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        // Don't show an answer while the
+        // expression is obviously incomplete.
+
+        if (
+            /[+\-*/.(]$/.test(expression)
+        ) {
+
+            liveResult.textContent = "";
+
+            liveResult.classList.remove(
+                "visible"
+            );
+
+            return;
+        }
+
+
+        const tokens =
+            tokenize(expression);
+
+
+        // Empty expression.
+        if (!tokens.length) {
+
+            liveResult.textContent = "";
+
+            liveResult.classList.remove(
+                "visible"
+            );
+
+            return;
+        }
+
+
+        // Check parentheses.
+        let balance = 0;
+
+        for (const token of tokens) {
+
+            if (token === "(") {
+                balance++;
+            }
+
+            if (token === ")") {
+                balance--;
+
+                if (balance < 0) {
+                    throw new Error();
+                }
+            }
+        }
+
+
+        // Don't show result until all
+        // parentheses are closed.
+
+        if (balance !== 0) {
+
+            liveResult.textContent = "";
+
+            liveResult.classList.remove(
+                "visible"
+            );
+
+            return;
+        }
+
+
+        const result =
+            evaluate(tokens);
+
+
+        if (
+            !Number.isFinite(result)
+        ) {
+            throw new Error();
+        }
+
+
+        const cleanResult =
+            Number(
+                result.toPrecision(12)
+            );
+
+
+        liveResult.textContent =
+            String(cleanResult);
+
+
+        liveResult.classList.add(
+            "visible"
+        );
+
+    }
+
+    catch {
+
+        // Invalid/incomplete expression.
+        // Don't annoy the user with "Error"
+        // while they're still typing.
+
+        liveResult.textContent = "";
+
+        liveResult.classList.remove(
+            "visible"
+        );
+    }
+}
 
 // ================================
 // CALCULATE
