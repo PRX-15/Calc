@@ -79,7 +79,7 @@ function render(
         expression || "0";
 
 
-    if (
+        if (
         document.activeElement === display
     ) {
 
@@ -95,18 +95,16 @@ function render(
                 display.value.length
             );
 
-
         display.setSelectionRange(
             start,
             end
         );
 
-
         savedCursorStart = start;
         savedCursorEnd = end;
+    }
 
     updateLiveResult();
-    }
 }
 
 
