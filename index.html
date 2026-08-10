@@ -1,41 +1,370 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Calculator</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b0b0d"
+    >
+
+    <title>Calc</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css?v=8"
+    >
+    <link rel="manifest"
+      href="manifest.json">
 </head>
+
 <body>
 
-<div class="calculator">
-    <input type="text" id="display" readonly>
+<div class="app">
 
-    <div class="buttons">
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="deleteLast()">⌫</button>
-        <button onclick="append('/')">÷</button>
-        <button onclick="append('*')">×</button>
+    <!-- HEADER -->
 
-        <button onclick="append('7')">7</button>
-        <button onclick="append('8')">8</button>
-        <button onclick="append('9')">9</button>
-        <button onclick="append('-')">−</button>
+    <header>
 
-        <button onclick="append('4')">4</button>
-        <button onclick="append('5')">5</button>
-        <button onclick="append('6')">6</button>
-        <button onclick="append('+')">+</button>
+        <div>
+            <div class="brand">
+                CALC
+            </div>
 
-        <button onclick="append('1')">1</button>
-        <button onclick="append('2')">2</button>
-        <button onclick="append('3')">3</button>
-        <button onclick="calculate()">=</button>
+            <div class="subtitle">
+                Simple. Fast. Yours.
+            </div>
+        </div>
 
-        <button onclick="append('0')" class="zero">0</button>
-        <button onclick="append('.')">.</button>
-    </div>
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="round-button"
+                id="themeButton"
+                aria-label="Toggle theme"
+            >
+                ☼
+            </button>
+
+            <button
+                type="button"
+                class="round-button"
+                id="historyButton"
+                aria-label="Open history"
+            >
+                ◷
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- CALCULATOR -->
+
+    <main class="calculator">
+
+        <!-- DISPLAY -->
+
+        <section class="display-card">
+
+            <div id="expressionPreview"></div>
+
+            <input
+    id="display"
+    type="text"
+    inputmode="none"
+    autocomplete="off"
+    autocorrect="off"
+    spellcheck="false"
+    value="0"
+    aria-label="Calculator display"
+>
+   <div
+    id="liveResult"
+    class="live-result"
+    aria-live="polite"
+></div>
+
+        </section>
+
+
+        <!-- BUTTONS -->
+
+        <section
+            class="buttons"
+            aria-label="Calculator buttons"
+        >
+
+            <!-- ROW 1 -->
+
+            <button
+                type="button"
+                class="utility"
+                onclick="clearDisplay()"
+            >
+                AC
+            </button>
+
+            <button
+                type="button"
+                class="utility"
+                onclick="deleteLast()"
+            >
+                ⌫
+            </button>
+
+            <button
+                type="button"
+                class="utility"
+                onclick="percentage()"
+            >
+                %
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('/')"
+            >
+                ÷
+            </button>
+
+
+            <!-- ROW 2 -->
+
+            <button
+                type="button"
+                class="utility"
+                onclick="toggleSign()"
+            >
+                ±
+            </button>
+
+            <button
+                type="button"
+                class="utility"
+                onclick="squareRoot()"
+            >
+                √
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('*')"
+            >
+                ×
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('-')"
+            >
+                −
+            </button>
+
+
+            <!-- ROW 3 -->
+
+            <button
+                type="button"
+                onclick="append('7')"
+            >
+                7
+            </button>
+
+            <button
+                type="button"
+                onclick="append('8')"
+            >
+                8
+            </button>
+
+            <button
+                type="button"
+                onclick="append('9')"
+            >
+                9
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('+')"
+            >
+                +
+            </button>
+
+
+            <!-- ROW 4 -->
+
+            <button
+                type="button"
+                onclick="append('4')"
+            >
+                4
+            </button>
+
+            <button
+                type="button"
+                onclick="append('5')"
+            >
+                5
+            </button>
+
+            <button
+                type="button"
+                onclick="append('6')"
+            >
+                6
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('(')"
+            >
+                (
+            </button>
+
+
+            <!-- ROW 5 -->
+
+            <button
+                type="button"
+                onclick="append('1')"
+            >
+                1
+            </button>
+
+            <button
+                type="button"
+                onclick="append('2')"
+            >
+                2
+            </button>
+
+            <button
+                type="button"
+                onclick="append('3')"
+            >
+                3
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append(')')"
+            >
+                )
+            </button>
+
+
+            <!-- ROW 6 -->
+
+            <button
+                type="button"
+                class="zero"
+                onclick="append('0')"
+            >
+                0
+            </button>
+
+            <button
+                type="button"
+                onclick="append('.')"
+            >
+                .
+            </button>
+
+            <button
+                type="button"
+                class="equals"
+                onclick="calculate()"
+            >
+                =
+            </button>
+
+        </section>
+
+    </main>
+
 </div>
 
-<script src="script.js"></script>
+
+<!-- =========================
+     HISTORY
+========================= -->
+
+<div
+    id="historyOverlay"
+    class="history-overlay"
+    aria-hidden="true"
+>
+
+    <aside
+        class="history-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Calculation history"
+    >
+
+        <div class="history-head">
+
+            <div>
+
+                <div class="panel-title">
+                    History
+                </div>
+
+                <div class="panel-subtitle">
+                    Your recent calculations
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="close-button"
+                id="closeHistory"
+                aria-label="Close history"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="historyList"
+            class="history-list"
+        ></div>
+
+
+        <button
+            type="button"
+            class="clear-history"
+            id="clearHistory"
+        >
+            Clear history
+        </button>
+
+    </aside>
+
+</div>
+
+
+<script src="script.js?v=8"></script>
+
 </body>
 </html>
