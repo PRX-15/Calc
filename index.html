@@ -1,41 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Calculator</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <meta name="theme-color" content="#0b0b0d">
+
+    <title>Calc</title>
+
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
+
 <body>
 
-<div class="calculator">
-    <input type="text" id="display" readonly>
+<div class="app">
 
-    <div class="buttons">
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="deleteLast()">⌫</button>
-        <button onclick="append('/')">÷</button>
-        <button onclick="append('*')">×</button>
+    <header>
+        <div>
+            <div class="brand">CALC</div>
+            <div class="subtitle">Simple. Fast. Yours.</div>
+        </div>
 
-        <button onclick="append('7')">7</button>
-        <button onclick="append('8')">8</button>
-        <button onclick="append('9')">9</button>
-        <button onclick="append('-')">−</button>
+        <div class="header-actions">
 
-        <button onclick="append('4')">4</button>
-        <button onclick="append('5')">5</button>
-        <button onclick="append('6')">6</button>
-        <button onclick="append('+')">+</button>
+            <button
+                type="button"
+                class="round-button"
+                id="themeButton"
+            >☼</button>
 
-        <button onclick="append('1')">1</button>
-        <button onclick="append('2')">2</button>
-        <button onclick="append('3')">3</button>
-        <button onclick="calculate()">=</button>
+            <button
+                type="button"
+                class="round-button"
+                id="historyButton"
+            >◷</button>
 
-        <button onclick="append('0')" class="zero">0</button>
-        <button onclick="append('.')">.</button>
-    </div>
+        </div>
+    </header>
+
+
+    <main class="calculator">
+
+        <section class="display-card">
+
+            <div id="expressionPreview"></div>
+
+            <input
+                id="display"
+                type="text"
+                readonly
+                value="0"
+            >
+
+        </section>
+
+
+        <section class="buttons">
+
+            <button class="utility" onclick="clearDisplay()">AC</button>
+            <button class="utility" onclick="deleteLast()">⌫</button>
+
+            <button class="operator" onclick="append('/')">÷</button>
+            <button class="operator" onclick="append('*')">×</button>
+
+
+            <button onclick="append('7')">7</button>
+            <button onclick="append('8')">8</button>
+            <button onclick="append('9')">9</button>
+            <button class="operator" onclick="append('-')">−</button>
+
+
+            <button onclick="append('4')">4</button>
+            <button onclick="append('5')">5</button>
+            <button onclick="append('6')">6</button>
+            <button class="operator" onclick="append('+')">+</button>
+
+
+            <button onclick="append('1')">1</button>
+            <button onclick="append('2')">2</button>
+            <button onclick="append('3')">3</button>
+
+            <button
+                class="equals"
+                onclick="calculate()"
+            >=</button>
+
+
+            <button
+                class="zero"
+                onclick="append('0')"
+            >0</button>
+
+            <button onclick="append('.')">.</button>
+
+        </section>
+
+    </main>
+
 </div>
 
-<script src="script.js"></script>
+
+<!-- HISTORY -->
+
+<div
+    id="historyOverlay"
+    class="history-overlay"
+>
+
+    <aside class="history-panel">
+
+        <div class="history-head">
+
+            <div>
+                <div class="panel-title">
+                    History
+                </div>
+
+                <div class="panel-subtitle">
+                    Your recent calculations
+                </div>
+            </div>
+
+
+            <button
+                class="close-button"
+                id="closeHistory"
+            >×</button>
+
+        </div>
+
+
+        <div
+            id="historyList"
+            class="history-list"
+        ></div>
+
+
+        <button
+            class="clear-history"
+            id="clearHistory"
+        >
+            Clear history
+        </button>
+
+    </aside>
+
+</div>
+
+
+<script src="script.js?v=7"></script>
+
 </body>
 </html>
