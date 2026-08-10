@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <meta name="theme-color" content="#0b0b0d">
+
     <title>Calc</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 
 <body>
@@ -12,94 +16,139 @@
 <div class="app">
 
     <header>
-        <h1>Calc</h1>
+        <div>
+            <div class="brand">CALC</div>
+            <div class="subtitle">Simple. Fast. Yours.</div>
+        </div>
 
-        <div class="header-buttons">
-            <button class="icon-button" id="themeButton" aria-label="Toggle theme">
-                ☀️
-            </button>
+        <div class="header-actions">
 
-            <button class="icon-button" id="historyButton" aria-label="Calculation history">
-                🕘
-            </button>
+            <button
+                type="button"
+                class="round-button"
+                id="themeButton"
+            >☼</button>
+
+            <button
+                type="button"
+                class="round-button"
+                id="historyButton"
+            >◷</button>
+
         </div>
     </header>
 
 
     <main class="calculator">
 
-        <div class="display-container">
+        <section class="display-card">
+
             <div id="expressionPreview"></div>
+
             <input
-                type="text"
                 id="display"
+                type="text"
                 readonly
-                inputmode="none"
-                aria-label="Calculator display"
+                value="0"
             >
-        </div>
+
+        </section>
 
 
-        <div class="buttons">
+        <section class="buttons">
 
-            <button class="special" onclick="clearDisplay()">C</button>
-            <button class="special" onclick="deleteLast()">⌫</button>
+            <button class="utility" onclick="clearDisplay()">AC</button>
+            <button class="utility" onclick="deleteLast()">⌫</button>
+
             <button class="operator" onclick="append('/')">÷</button>
             <button class="operator" onclick="append('*')">×</button>
+
 
             <button onclick="append('7')">7</button>
             <button onclick="append('8')">8</button>
             <button onclick="append('9')">9</button>
             <button class="operator" onclick="append('-')">−</button>
 
+
             <button onclick="append('4')">4</button>
             <button onclick="append('5')">5</button>
             <button onclick="append('6')">6</button>
             <button class="operator" onclick="append('+')">+</button>
 
+
             <button onclick="append('1')">1</button>
             <button onclick="append('2')">2</button>
             <button onclick="append('3')">3</button>
-            <button class="equals" onclick="calculate()">=</button>
 
-            <button class="zero" onclick="append('0')">0</button>
+            <button
+                class="equals"
+                onclick="calculate()"
+            >=</button>
+
+
+            <button
+                class="zero"
+                onclick="append('0')"
+            >0</button>
+
             <button onclick="append('.')">.</button>
 
-        </div>
+        </section>
 
     </main>
 
 </div>
 
 
-<!-- History panel -->
+<!-- HISTORY -->
 
-<div class="overlay" id="historyOverlay">
+<div
+    id="historyOverlay"
+    class="history-overlay"
+>
 
-    <div class="history-panel">
+    <aside class="history-panel">
 
-        <div class="panel-header">
-            <h2>History</h2>
+        <div class="history-head">
 
-            <button class="close-button" id="closeHistory">
-                ✕
-            </button>
+            <div>
+                <div class="panel-title">
+                    History
+                </div>
+
+                <div class="panel-subtitle">
+                    Your recent calculations
+                </div>
+            </div>
+
+
+            <button
+                class="close-button"
+                id="closeHistory"
+            >×</button>
+
         </div>
 
-        <div id="historyList">
-            <p class="empty-history">No calculations yet.</p>
-        </div>
 
-        <button class="clear-history" id="clearHistory">
+        <div
+            id="historyList"
+            class="history-list"
+        ></div>
+
+
+        <button
+            class="clear-history"
+            id="clearHistory"
+        >
             Clear history
         </button>
 
-    </div>
+    </aside>
 
 </div>
 
 
-<script src="script.js"></script>
+<script src="script.js?v=7"></script>
 
 </body>
 </html>
