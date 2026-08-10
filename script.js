@@ -20,16 +20,47 @@ let justCalculated = false;
 // MOBILE CARET / CURSOR SUPPORT
 // ================================
 
-display.addEventListener("pointerdown", () => {
-
-    // Allow the browser to place the caret naturally.
-    display.focus();
-
-});
+let savedCursorStart = 0;
+let savedCursorEnd = 0;
 
 
-let history = JSON.parse(
-    localStorage.getItem("calcHistory") || "[]"
+function saveCursorPosition() {
+
+    if (
+        document.activeElement === display &&
+        display.selectionStart !== null
+    ) {
+
+        savedCursorStart =
+            display.selectionStart;
+
+        savedCursorEnd =
+            display.selectionEnd;
+    }
+}
+
+
+// Save cursor whenever the user
+// taps/drags/selects inside the display.
+
+display.addEventListener(
+    "select",
+    saveCursorPosition
+);
+
+display.addEventListener(
+    "keyup",
+    saveCursorPosition
+);
+
+display.addEventListener(
+    "pointerup",
+    saveCursorPosition
+);
+
+display.addEventListener(
+    "touchend",
+    saveCursorPosition
 );
 
 
@@ -37,31 +68,40 @@ let history = JSON.parse(
 // DISPLAY
 // ================================
 
-function render() {
-
-    const oldStart = display.selectionStart;
-    const oldEnd = display.selectionEnd;
+function render(
+    cursorStart = savedCursorStart,
+    cursorEnd = savedCursorEnd
+) {
 
     display.value =
         expression || "0";
 
 
-    // Keep the cursor where the user was editing.
     if (
-        document.activeElement === display &&
-        oldStart !== null
+        document.activeElement === display
     ) {
 
-        const position =
+        const start =
             Math.min(
-                oldStart,
+                cursorStart,
                 display.value.length
             );
 
+        const end =
+            Math.min(
+                cursorEnd,
+                display.value.length
+            );
+
+
         display.setSelectionRange(
-            position,
-            position
+            start,
+            end
         );
+
+
+        savedCursorStart = start;
+        savedCursorEnd = end;
     }
 }
 
@@ -85,45 +125,72 @@ function append(value) {
 
     vibrate();
 
-    display.focus();
 
-
-    // If result was just calculated,
-    // start fresh when entering a number.
+    // If we just calculated a result,
+    // typing a number starts a new calculation.
     if (
         justCalculated &&
         !["+", "-", "*", "/"].includes(value)
     ) {
 
         expression = "";
+
         justCalculated = false;
 
-        display.value = "";
+        savedCursorStart = 0;
+        savedCursorEnd = 0;
     }
 
 
+    // Use the LAST known cursor position.
+    // Do NOT focus first — that can move
+    // the cursor to the end on mobile.
+
     const start =
-        display.selectionStart ?? expression.length;
+        Math.min(
+            savedCursorStart,
+            expression.length
+        );
 
     const end =
-        display.selectionEnd ?? start;
+        Math.min(
+            savedCursorEnd,
+            expression.length
+        );
 
 
-    // Insert at cursor.
+    // Insert the button's character
+    // exactly where the cursor is.
+
     expression =
         expression.slice(0, start) +
         value +
         expression.slice(end);
 
 
-    render();
+    // New cursor position after insertion.
 
-
-    // Put cursor immediately after
-    // the newly inserted character.
     const newPosition =
         start + value.length;
 
+
+    savedCursorStart =
+        newPosition;
+
+    savedCursorEnd =
+        newPosition;
+
+
+    render(
+        newPosition,
+        newPosition
+    );
+
+
+    // Re-focus AFTER the value has been
+    // updated, without changing the position.
+
+    display.focus();
 
     display.setSelectionRange(
         newPosition,
@@ -157,18 +224,23 @@ function deleteLast() {
 
     vibrate();
 
-    display.focus();
-
 
     const start =
-        display.selectionStart ?? expression.length;
+        Math.min(
+            savedCursorStart,
+            expression.length
+        );
 
     const end =
-        display.selectionEnd ?? start;
+        Math.min(
+            savedCursorEnd,
+            expression.length
+        );
 
 
-    // If something is selected,
-    // delete the selected section.
+    // If text is selected,
+    // delete the selected text.
+
     if (start !== end) {
 
         expression =
@@ -176,19 +248,19 @@ function deleteLast() {
             expression.slice(end);
 
 
-        render();
+        savedCursorStart = start;
+        savedCursorEnd = start;
 
-        display.setSelectionRange(
-            start,
-            start
-        );
+
+        render(start, start);
 
         return;
     }
 
 
-    // Nothing selected → delete
-    // character immediately before cursor.
+    // Nothing selected:
+    // delete character before cursor.
+
     if (start > 0) {
 
         expression =
@@ -196,12 +268,20 @@ function deleteLast() {
             expression.slice(start);
 
 
-        render();
+        const newPosition =
+            start - 1;
 
 
-        display.setSelectionRange(
-            start - 1,
-            start - 1
+        savedCursorStart =
+            newPosition;
+
+        savedCursorEnd =
+            newPosition;
+
+
+        render(
+            newPosition,
+            newPosition
         );
     }
 }
