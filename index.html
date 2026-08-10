@@ -2,24 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-    <meta name="theme-color" content="#0b0b0d">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b0b0d"
+    >
 
     <title>Calc</title>
 
-    <link rel="stylesheet" href="style.css?v=7">
+    <link
+        rel="stylesheet"
+        href="style.css?v=8"
+    >
 </head>
 
 <body>
 
 <div class="app">
 
+    <!-- HEADER -->
+
     <header>
+
         <div>
-            <div class="brand">CALC</div>
-            <div class="subtitle">Simple. Fast. Yours.</div>
+            <div class="brand">
+                CALC
+            </div>
+
+            <div class="subtitle">
+                Simple. Fast. Yours.
+            </div>
         </div>
+
 
         <div class="header-actions">
 
@@ -27,19 +46,30 @@
                 type="button"
                 class="round-button"
                 id="themeButton"
-            >☼</button>
+                aria-label="Toggle theme"
+            >
+                ☼
+            </button>
 
             <button
                 type="button"
                 class="round-button"
                 id="historyButton"
-            >◷</button>
+                aria-label="Open history"
+            >
+                ◷
+            </button>
 
         </div>
+
     </header>
 
 
+    <!-- CALCULATOR -->
+
     <main class="calculator">
+
+        <!-- DISPLAY -->
 
         <section class="display-card">
 
@@ -50,48 +80,209 @@
                 type="text"
                 readonly
                 value="0"
+                aria-label="Calculator display"
             >
 
         </section>
 
 
-        <section class="buttons">
+        <!-- BUTTONS -->
 
-            <button class="utility" onclick="clearDisplay()">AC</button>
-            <button class="utility" onclick="deleteLast()">⌫</button>
+        <section
+            class="buttons"
+            aria-label="Calculator buttons"
+        >
 
-            <button class="operator" onclick="append('/')">÷</button>
-            <button class="operator" onclick="append('*')">×</button>
-
-
-            <button onclick="append('7')">7</button>
-            <button onclick="append('8')">8</button>
-            <button onclick="append('9')">9</button>
-            <button class="operator" onclick="append('-')">−</button>
-
-
-            <button onclick="append('4')">4</button>
-            <button onclick="append('5')">5</button>
-            <button onclick="append('6')">6</button>
-            <button class="operator" onclick="append('+')">+</button>
-
-
-            <button onclick="append('1')">1</button>
-            <button onclick="append('2')">2</button>
-            <button onclick="append('3')">3</button>
+            <!-- ROW 1 -->
 
             <button
-                class="equals"
-                onclick="calculate()"
-            >=</button>
-
+                type="button"
+                class="utility"
+                onclick="clearDisplay()"
+            >
+                AC
+            </button>
 
             <button
+                type="button"
+                class="utility"
+                onclick="deleteLast()"
+            >
+                ⌫
+            </button>
+
+            <button
+                type="button"
+                class="utility"
+                onclick="percentage()"
+            >
+                %
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('/')"
+            >
+                ÷
+            </button>
+
+
+            <!-- ROW 2 -->
+
+            <button
+                type="button"
+                class="utility"
+                onclick="toggleSign()"
+            >
+                ±
+            </button>
+
+            <button
+                type="button"
+                class="utility"
+                onclick="squareRoot()"
+            >
+                √
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('*')"
+            >
+                ×
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('-')"
+            >
+                −
+            </button>
+
+
+            <!-- ROW 3 -->
+
+            <button
+                type="button"
+                onclick="append('7')"
+            >
+                7
+            </button>
+
+            <button
+                type="button"
+                onclick="append('8')"
+            >
+                8
+            </button>
+
+            <button
+                type="button"
+                onclick="append('9')"
+            >
+                9
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('+')"
+            >
+                +
+            </button>
+
+
+            <!-- ROW 4 -->
+
+            <button
+                type="button"
+                onclick="append('4')"
+            >
+                4
+            </button>
+
+            <button
+                type="button"
+                onclick="append('5')"
+            >
+                5
+            </button>
+
+            <button
+                type="button"
+                onclick="append('6')"
+            >
+                6
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append('(')"
+            >
+                (
+            </button>
+
+
+            <!-- ROW 5 -->
+
+            <button
+                type="button"
+                onclick="append('1')"
+            >
+                1
+            </button>
+
+            <button
+                type="button"
+                onclick="append('2')"
+            >
+                2
+            </button>
+
+            <button
+                type="button"
+                onclick="append('3')"
+            >
+                3
+            </button>
+
+            <button
+                type="button"
+                class="operator"
+                onclick="append(')')"
+            >
+                )
+            </button>
+
+
+            <!-- ROW 6 -->
+
+            <button
+                type="button"
                 class="zero"
                 onclick="append('0')"
-            >0</button>
+            >
+                0
+            </button>
 
-            <button onclick="append('.')">.</button>
+            <button
+                type="button"
+                onclick="append('.')"
+            >
+                .
+            </button>
+
+            <button
+                type="button"
+                class="equals"
+                onclick="calculate()"
+            >
+                =
+            </button>
 
         </section>
 
@@ -100,18 +291,27 @@
 </div>
 
 
-<!-- HISTORY -->
+<!-- =========================
+     HISTORY
+========================= -->
 
 <div
     id="historyOverlay"
     class="history-overlay"
+    aria-hidden="true"
 >
 
-    <aside class="history-panel">
+    <aside
+        class="history-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Calculation history"
+    >
 
         <div class="history-head">
 
             <div>
+
                 <div class="panel-title">
                     History
                 </div>
@@ -119,13 +319,18 @@
                 <div class="panel-subtitle">
                     Your recent calculations
                 </div>
+
             </div>
 
 
             <button
+                type="button"
                 class="close-button"
                 id="closeHistory"
-            >×</button>
+                aria-label="Close history"
+            >
+                ×
+            </button>
 
         </div>
 
@@ -137,6 +342,7 @@
 
 
         <button
+            type="button"
             class="clear-history"
             id="clearHistory"
         >
@@ -148,7 +354,7 @@
 </div>
 
 
-<script src="script.js?v=7"></script>
+<script src="script.js?v=8"></script>
 
 </body>
 </html>
