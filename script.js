@@ -731,6 +731,34 @@ historyOverlay.addEventListener(
 // DARK / LIGHT THEME
 // ================================
 
+function applyTheme(theme) {
+
+    const isLight =
+        theme === "light";
+
+
+    document.body.classList.toggle(
+        "light",
+        isLight
+    );
+
+
+    document.documentElement.style
+        .setProperty(
+            "color-scheme",
+            isLight
+                ? "light"
+                : "dark"
+        );
+
+
+    themeButton.textContent =
+        isLight
+            ? "☾"
+            : "☼";
+}
+
+
 function loadTheme() {
 
     const saved =
@@ -738,24 +766,17 @@ function loadTheme() {
             "calcTheme"
         );
 
+
     if (saved === "light") {
 
-        document.body.classList.add(
-            "light"
-        );
+        applyTheme("light");
 
-        themeButton.textContent =
-            "☾";
     }
 
     else {
 
-        document.body.classList.remove(
-            "light"
-        );
+        applyTheme("dark");
 
-        themeButton.textContent =
-            "☼";
     }
 }
 
@@ -764,26 +785,28 @@ function toggleTheme() {
 
     vibrate();
 
-    document.body.classList.toggle(
-        "light"
-    );
 
-    const light =
+    const currentlyLight =
         document.body.classList.contains(
             "light"
         );
 
+
+    const nextTheme =
+        currentlyLight
+            ? "dark"
+            : "light";
+
+
     localStorage.setItem(
         "calcTheme",
-        light
-            ? "light"
-            : "dark"
+        nextTheme
     );
 
-    themeButton.textContent =
-        light
-            ? "☾"
-            : "☼";
+
+    applyTheme(
+        nextTheme
+    );
 }
 
 
@@ -791,8 +814,6 @@ themeButton.addEventListener(
     "click",
     toggleTheme
 );
-
-
 // ================================
 // KEYBOARD SUPPORT
 // ================================
