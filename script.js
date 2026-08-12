@@ -1332,7 +1332,7 @@ function renderHistory() {
     }
 
 
-    history.forEach((item) => {
+    history.forEach((item, index) => {
 
         const row =
             document.createElement("div");
@@ -1340,18 +1340,136 @@ function renderHistory() {
         row.className =
             "history-item";
 
-        row.innerHTML = `
-            <div class="history-expression">
-                ${escapeHTML(item.calculation)}
-            </div>
 
-            <div class="history-result">
-                = ${escapeHTML(item.result)}
-            </div>
-        `;
+        // --------------------------------
+        // CALCULATION
+        // --------------------------------
+
+        const calculation =
+            document.createElement("div");
+
+        calculation.className =
+            "history-expression";
+
+        calculation.textContent =
+            item.calculation;
 
 
-        // Tap history item to reuse result.
+        // --------------------------------
+        // RESULT
+        // --------------------------------
+
+        const result =
+            document.createElement("div");
+
+        result.className =
+            "history-result";
+
+        result.textContent =
+            `= ${item.result}`;
+
+
+        // --------------------------------
+        // TIME
+        // --------------------------------
+
+        const time =
+            document.createElement("div");
+
+        time.className =
+            "history-time";
+
+        if (item.time) {
+
+            const date =
+                new Date(item.time);
+
+            time.textContent =
+                date.toLocaleString(
+                    undefined,
+                    {
+                        dateStyle: "short",
+                        timeStyle: "short"
+                    }
+                );
+
+        }
+        else {
+
+            time.textContent =
+                "Unknown time";
+        }
+
+
+        // --------------------------------
+        // DELETE BUTTON
+        // --------------------------------
+
+        const deleteButton =
+            document.createElement("button");
+
+        deleteButton.type =
+            "button";
+
+        deleteButton.className =
+            "history-delete";
+
+        deleteButton.textContent =
+            "×";
+
+        deleteButton.setAttribute(
+            "aria-label",
+            "Delete calculation"
+        );
+
+
+        deleteButton.addEventListener(
+            "click",
+            (event) => {
+
+                event.stopPropagation();
+
+                deleteHistoryItem(index);
+            }
+        );
+
+
+        // --------------------------------
+        // CONTENT WRAPPER
+        // --------------------------------
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "history-content";
+
+        content.appendChild(
+            calculation
+        );
+
+        content.appendChild(
+            result
+        );
+
+        content.appendChild(
+            time
+        );
+
+
+        row.appendChild(
+            content
+        );
+
+        row.appendChild(
+            deleteButton
+        );
+
+
+        // --------------------------------
+        // REUSE HISTORY ITEM
+        // --------------------------------
+
         row.addEventListener(
             "click",
             () => {
@@ -1361,7 +1479,8 @@ function renderHistory() {
                 expression =
                     item.result;
 
-                justCalculated = true;
+                justCalculated =
+                    true;
 
                 expressionPreview.textContent =
                     item.calculation + " =";
@@ -1372,21 +1491,31 @@ function renderHistory() {
             }
         );
 
+
         historyList.appendChild(row);
     });
 }
 
+function deleteHistoryItem(index) {
 
-function escapeHTML(value) {
+    vibrate();
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    if (
+        index < 0 ||
+        index >= history.length
+    ) {
+        return;
+    }
+
+    history.splice(
+        index,
+        1
+    );
+
+    saveHistory();
+
+    renderHistory();
 }
-
 
 // ================================
 // CLEAR HISTORY
