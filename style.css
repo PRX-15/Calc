@@ -430,16 +430,20 @@ header {
 }
 
 .history-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
     padding: 14px 5px;
 
     border-bottom:
         1px solid var(--border);
 
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
 }
 
 .history-content {
