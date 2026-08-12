@@ -430,12 +430,74 @@ header {
 }
 
 .history-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
     padding: 14px 5px;
 
     border-bottom:
         1px solid var(--border);
 
     cursor: pointer;
+}
+
+.history-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.history-time {
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    opacity: .75;
+}
+
+
+.history-delete {
+    flex-shrink: 0;
+
+    width: 38px;
+    height: 38px;
+
+    border: 2px solid #87CEEB;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: #87CEEB;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.history-delete:active {
+    background: rgba(135, 206, 235, .12);
+
+    color: #87CEEB;
+
+    border-color: #87CEEB;
+}
+
+.history-delete:hover,
+.history-delete:focus-visible {
+    color: #87CEEB;
+    border-color: #87CEEB;
+    outline: none;
 }
 
 .history-item:active {
