@@ -470,13 +470,13 @@ header {
     width: 38px;
     height: 38px;
 
-    border: 0;
+    border: 2px solid #87CEEB;
 
     border-radius: 12px;
 
     background: transparent;
 
-    color: var(--muted);
+    color: #87CEEB;
 
     font-size: 24px;
 
@@ -485,12 +485,19 @@ header {
     cursor: pointer;
 }
 
-
 .history-delete:active {
-    background:
-        rgba(255, 98, 98, .12);
+    background: rgba(135, 206, 235, .12);
 
-    color: var(--danger);
+    color: #87CEEB;
+
+    border-color: #87CEEB;
+}
+
+.history-delete:hover,
+.history-delete:focus-visible {
+    color: #87CEEB;
+    border-color: #87CEEB;
+    outline: none;
 }
 
 .history-item:active {
