@@ -81,6 +81,46 @@ display.addEventListener(
     saveCursorPosition
 );
 
+display.addEventListener(
+    "input",
+    function () {
+
+        const candidate =
+            display.value;
+
+        // Valid user-entered expression.
+        if (isInputValid(candidate)) {
+
+            expression =
+                candidate;
+
+            savedCursorStart =
+                display.selectionStart ?? candidate.length;
+
+            savedCursorEnd =
+                display.selectionEnd ?? candidate.length;
+
+            justCalculated = false;
+
+            updateLiveResult();
+
+            return;
+        }
+
+        // Invalid input:
+        // restore the last valid expression.
+        display.value =
+            expression || "0";
+
+        display.setSelectionRange(
+            savedCursorStart,
+            savedCursorEnd
+        );
+
+        updateLiveResult();
+    }
+);
+
 
 // ================================
 // DISPLAY
@@ -143,26 +183,18 @@ function append(value) {
 
     vibrate();
 
-
     // If we just calculated a result,
-    // typing a number starts a new calculation.
+    // typing a new number starts a new calculation.
     if (
         justCalculated &&
-        !["+", "-", "*", "/"].includes(value)
+        !["+", "-", "*", "/", ")", "."].includes(value)
     ) {
-
         expression = "";
-
         justCalculated = false;
 
         savedCursorStart = 0;
         savedCursorEnd = 0;
     }
-
-
-    // Use the LAST known cursor position.
-    // Do NOT focus first — that can move
-    // the cursor to the end on mobile.
 
     const start =
         Math.min(
@@ -176,21 +208,197 @@ function append(value) {
             expression.length
         );
 
+    const before =
+        expression.slice(0, start);
 
-    // Insert the button's character
-    // exactly where the cursor is.
-
-    expression =
-        expression.slice(0, start) +
-        value +
+    const after =
         expression.slice(end);
 
+    let newValue = value;
 
-    // New cursor position after insertion.
+    // --------------------------------
+    // DECIMAL
+    // --------------------------------
+
+    if (newValue === ".") {
+
+        // Don't put a decimal after ")"
+        if (before.endsWith(")")) {
+            return;
+        }
+
+        // Find the number immediately before
+        // the cursor.
+        const leftNumber =
+            before.split(/[+\-*/()]/).pop();
+
+        // Find the number immediately after
+        // the cursor.
+        const rightNumber =
+            after.split(/[+\-*/()]/)[0];
+
+        // If either side already contains a decimal,
+        // inserting another one would create
+        // something like 12.3.4
+        if (
+            leftNumber.includes(".") ||
+            rightNumber.includes(".")
+        ) {
+            return;
+        }
+
+        // If "." starts a new number,
+        // turn it into "0."
+        if (
+            !before ||
+            ["+", "-", "*", "/", "("].includes(
+                before.slice(-1)
+            )
+        ) {
+            newValue = "0.";
+        }
+    }
+
+    // --------------------------------
+    // OPERATORS
+    // --------------------------------
+
+    if (
+        ["+", "-", "*", "/"].includes(newValue)
+    ) {
+
+        const previous =
+            before.slice(-1);
+
+        const next =
+            after.slice(0, 1);
+
+        // Only "-" is allowed to begin
+        // an expression as unary minus.
+        if (
+            !previous &&
+            newValue !== "-"
+        ) {
+            return;
+        }
+
+        // Don't allow two operators together.
+        if (
+            ["+", "-", "*", "/"].includes(previous)
+        ) {
+            // Allow unary minus after "("
+            if (
+                !(
+                    previous === "(" &&
+                    newValue === "-"
+                )
+            ) {
+                return;
+            }
+        }
+
+        // Don't allow an operator immediately
+        // before ")"
+        if (next === ")") {
+            return;
+        }
+
+        // Don't allow + * / after "("
+        if (
+            previous === "(" &&
+            newValue !== "-"
+        ) {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // OPENING PARENTHESIS
+    // --------------------------------
+
+    if (newValue === "(") {
+
+        const previous =
+            before.slice(-1);
+
+        // Don't allow 2( or )(.
+        if (
+            /[0-9)]/.test(previous)
+        ) {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // CLOSING PARENTHESIS
+    // --------------------------------
+
+    if (newValue === ")") {
+
+        const previous =
+            before.slice(-1);
+
+        // Must have something before it.
+        if (!previous) {
+            return;
+        }
+
+        // Can't be after an operator or "("
+        if (
+            ["+", "-", "*", "/", "("].includes(
+                previous
+            )
+        ) {
+            return;
+        }
+
+        // Count parentheses in the expression
+        // BEFORE inserting this one.
+        const openCount =
+            (before.match(/\(/g) || []).length;
+
+        const closeCount =
+            (before.match(/\)/g) || []).length;
+
+        // Can't close something that isn't open.
+        if (closeCount >= openCount) {
+            return;
+        }
+
+        // Don't allow "(2)3"
+        if (
+            after &&
+            /[0-9(]/.test(after[0])
+        ) {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // BUILD CANDIDATE EXPRESSION
+    // --------------------------------
+
+    const candidate =
+        before +
+        newValue +
+        after;
+
+    // --------------------------------
+    // FINAL VALIDATION
+    // --------------------------------
+
+    if (!isInputValid(candidate)) {
+        return;
+    }
+
+    // --------------------------------
+    // INSERT
+    // --------------------------------
+
+    expression = candidate;
 
     const newPosition =
-        start + value.length;
-
+        start + newValue.length;
 
     savedCursorStart =
         newPosition;
@@ -198,15 +406,10 @@ function append(value) {
     savedCursorEnd =
         newPosition;
 
-
     render(
         newPosition,
         newPosition
     );
-
-
-    // Re-focus AFTER the value has been
-    // updated, without changing the position.
 
     display.focus();
 
@@ -216,7 +419,124 @@ function append(value) {
     );
 }
 
+function isInputValid(input) {
 
+    if (!input) {
+        return true;
+    }
+
+    // --------------------------------
+    // INVALID CHARACTERS
+    // --------------------------------
+
+    if (
+        !/^[0-9+\-*/().]*$/.test(input)
+    ) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID DECIMAL PATTERNS
+    // --------------------------------
+
+    const numbers =
+        input.split(/[+\-*/()]/);
+
+    for (const number of numbers) {
+
+        if (!number) {
+            continue;
+        }
+
+        // More than one decimal in one number.
+        if (
+            (number.match(/\./g) || []).length > 1
+        ) {
+            return false;
+        }
+
+        // "." is not allowed by itself.
+        if (number === ".") {
+            return false;
+        }
+    }
+
+    // --------------------------------
+    // PARENTHESES
+    // --------------------------------
+
+    let balance = 0;
+
+    for (let i = 0; i < input.length; i++) {
+
+        const char = input[i];
+
+        if (char === "(") {
+            balance++;
+        }
+
+        if (char === ")") {
+
+            balance--;
+
+            // Closing before opening.
+            if (balance < 0) {
+                return false;
+            }
+        }
+    }
+
+    // Don't allow more closing than opening.
+    if (balance < 0) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID OPERATOR SEQUENCES
+    // --------------------------------
+
+    if (
+        /[+*/]{2}/.test(input)
+    ) {
+        return false;
+    }
+
+    // Two "-" operators can still be valid
+    // in cases like 5--2, so don't reject
+    // every double-minus automatically.
+
+    // --------------------------------
+    // INVALID OPERATOR BEFORE ")"
+    // --------------------------------
+
+    if (
+        /[+\-*/(]\)/.test(input)
+    ) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID "NUMBER("
+    // --------------------------------
+
+    if (
+        /[0-9]\(/.test(input)
+    ) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID ")NUMBER"
+    // --------------------------------
+
+    if (
+        /\)[0-9(]/.test(input)
+    ) {
+        return false;
+    }
+
+    return true;
+}
 // ================================
 // CLEAR
 // ================================
@@ -728,7 +1048,7 @@ function calculate() {
 
 function percentage() {
 
-    if (!expression) {
+    if (!expression || expression === "Error") {
         return;
     }
 
@@ -736,26 +1056,148 @@ function percentage() {
 
     try {
 
+        // Find the last number in the expression.
+        const match =
+            expression.match(
+                /(?:^|[+\-*/(])(-?\d*\.?\d+)$/
+            );
+
+        if (!match) {
+            return;
+        }
+
+        const numberText =
+            match[1];
+
         const value =
-            Number(expression);
+            Number(numberText);
 
         if (!Number.isFinite(value)) {
             return;
         }
 
-        expression =
-            String(value / 100);
+        // Position of the last number.
+        const numberStart =
+            expression.length - numberText.length;
 
-        render();
+        // Everything before the last number.
+        const before =
+            expression.slice(0, numberStart);
+
+        // Find the operator immediately before
+        // the number.
+        const operator =
+            before.slice(-1);
+
+        // --------------------------------
+        // SIMPLE NUMBER
+        // --------------------------------
+
+        if (
+            !operator ||
+            ["("].includes(operator)
+        ) {
+
+            expression =
+                String(value / 100);
+
+            justCalculated = false;
+
+            render();
+
+            return;
+        }
+
+        // --------------------------------
+        // ADDITION / SUBTRACTION
+        // --------------------------------
+        //
+        // 200 + 10%  →  200 + 20
+        // 200 - 10%  →  200 - 20
+        //
+        // The percentage is based on the
+        // value immediately before + or -.
+
+        if (
+            operator === "+" ||
+            operator === "-"
+        ) {
+
+            const baseExpression =
+                before.slice(0, -1);
+
+            try {
+
+                const baseTokens =
+                    tokenize(baseExpression);
+
+                const base =
+                    evaluate(baseTokens);
+
+                if (
+                    !Number.isFinite(base)
+                ) {
+                    return;
+                }
+
+                const percentageValue =
+                    base * value / 100;
+
+                expression =
+                    baseExpression +
+                    operator +
+                    String(
+                        Number(
+                            percentageValue
+                                .toPrecision(12)
+                        )
+                    );
+
+                justCalculated = false;
+
+                render();
+
+                return;
+
+            } catch {
+                return;
+            }
+        }
+
+        // --------------------------------
+        // MULTIPLICATION / DIVISION
+        // --------------------------------
+        //
+        // 200 × 10% → 200 × 0.1 → 20
+        // 200 ÷ 10% → 200 ÷ 0.1 → 2000
+
+        if (
+            operator === "*" ||
+            operator === "/"
+        ) {
+
+            expression =
+                before +
+                String(
+                    Number(
+                        (value / 100)
+                            .toPrecision(12)
+                    )
+                );
+
+            justCalculated = false;
+
+            render();
+
+            return;
+        }
 
     }
 
     catch {
-        expression = "Error";
-        render();
+        return;
     }
 }
-
 
 // ================================
 // PLUS / MINUS
@@ -1195,3 +1637,15 @@ loadTheme();
 renderHistory();
 
 render();
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+            .catch(error => {
+                console.error(
+                    "Service Worker registration failed:",
+                    error
+                );
+            });
+    });
+}
