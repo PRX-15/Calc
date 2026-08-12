@@ -143,26 +143,19 @@ function append(value) {
 
     vibrate();
 
-
     // If we just calculated a result,
     // typing a number starts a new calculation.
     if (
         justCalculated &&
-        !["+", "-", "*", "/"].includes(value)
+        !["+", "-", "*", "/", ")", "."].includes(value)
     ) {
 
         expression = "";
-
         justCalculated = false;
 
         savedCursorStart = 0;
         savedCursorEnd = 0;
     }
-
-
-    // Use the LAST known cursor position.
-    // Do NOT focus first — that can move
-    // the cursor to the end on mobile.
 
     const start =
         Math.min(
@@ -176,21 +169,137 @@ function append(value) {
             expression.length
         );
 
+    const before =
+        expression.slice(0, start);
 
-    // Insert the button's character
-    // exactly where the cursor is.
-
-    expression =
-        expression.slice(0, start) +
-        value +
+    const after =
         expression.slice(end);
 
+    const previousChar =
+        before.slice(-1);
 
-    // New cursor position after insertion.
+    const nextChar =
+        after.charAt(0);
+
+    // --------------------------------
+    // DECIMAL VALIDATION
+    // --------------------------------
+
+    if (value === ".") {
+
+        // Don't allow a decimal immediately
+        // after a closing parenthesis.
+        if (previousChar === ")") {
+            return;
+        }
+
+        // Find the number currently being typed.
+        const currentNumber =
+            before.split(/[+\-*/()]/).pop();
+
+        // Don't allow another decimal point
+        // inside the same number.
+        if (currentNumber.includes(".")) {
+            return;
+        }
+
+        // If starting a new number with ".",
+        // automatically make it "0."
+        if (
+            !currentNumber &&
+            (
+                !previousChar ||
+                ["+", "-", "*", "/", "("].includes(previousChar)
+            )
+        ) {
+            value = "0.";
+        }
+    }
+
+    // --------------------------------
+    // OPERATOR VALIDATION
+    // --------------------------------
+
+    if (["+", "-", "*", "/"].includes(value)) {
+
+        // Don't allow operators at the beginning,
+        // except unary minus.
+        if (!previousChar && value !== "-") {
+            return;
+        }
+
+        // Don't allow two operators in a row.
+        if (
+            ["+", "-", "*", "/"].includes(previousChar)
+        ) {
+            return;
+        }
+
+        // Don't allow an operator immediately
+        // after an opening parenthesis.
+        if (previousChar === "(" && value !== "-") {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // CLOSING PARENTHESIS
+    // --------------------------------
+
+    if (value === ")") {
+
+        // Can't close an empty expression.
+        if (!expression) {
+            return;
+        }
+
+        // Can't put ")" after an operator or "(".
+        if (
+            !previousChar ||
+            ["+", "-", "*", "/", "("].includes(previousChar)
+        ) {
+            return;
+        }
+
+        // Check that we actually have an
+        // unmatched opening parenthesis.
+        const openCount =
+            (before.match(/\(/g) || []).length;
+
+        const closeCount =
+            (before.match(/\)/g) || []).length;
+
+        if (closeCount >= openCount) {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // OPENING PARENTHESIS
+    // --------------------------------
+
+    if (value === "(") {
+
+        // Don't allow "(" directly after a number
+        // or a closing parenthesis.
+        if (
+            /[0-9)]/.test(previousChar)
+        ) {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // INSERT CHARACTER
+    // --------------------------------
+
+    expression =
+        before +
+        value +
+        after;
 
     const newPosition =
         start + value.length;
-
 
     savedCursorStart =
         newPosition;
@@ -198,15 +307,10 @@ function append(value) {
     savedCursorEnd =
         newPosition;
 
-
     render(
         newPosition,
         newPosition
     );
-
-
-    // Re-focus AFTER the value has been
-    // updated, without changing the position.
 
     display.focus();
 
@@ -215,7 +319,6 @@ function append(value) {
         newPosition
     );
 }
-
 
 // ================================
 // CLEAR
