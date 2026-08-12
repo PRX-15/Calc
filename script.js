@@ -81,6 +81,46 @@ display.addEventListener(
     saveCursorPosition
 );
 
+display.addEventListener(
+    "input",
+    function () {
+
+        const candidate =
+            display.value;
+
+        // Valid user-entered expression.
+        if (isInputValid(candidate)) {
+
+            expression =
+                candidate;
+
+            savedCursorStart =
+                display.selectionStart ?? candidate.length;
+
+            savedCursorEnd =
+                display.selectionEnd ?? candidate.length;
+
+            justCalculated = false;
+
+            updateLiveResult();
+
+            return;
+        }
+
+        // Invalid input:
+        // restore the last valid expression.
+        display.value =
+            expression || "0";
+
+        display.setSelectionRange(
+            savedCursorStart,
+            savedCursorEnd
+        );
+
+        updateLiveResult();
+    }
+);
+
 
 // ================================
 // DISPLAY
@@ -144,12 +184,11 @@ function append(value) {
     vibrate();
 
     // If we just calculated a result,
-    // typing a number starts a new calculation.
+    // typing a new number starts a new calculation.
     if (
         justCalculated &&
         !["+", "-", "*", "/", ")", "."].includes(value)
     ) {
-
         expression = "";
         justCalculated = false;
 
@@ -175,101 +214,100 @@ function append(value) {
     const after =
         expression.slice(end);
 
-    const previousChar =
-        before.slice(-1);
-
-    const nextChar =
-        after.charAt(0);
+    let newValue = value;
 
     // --------------------------------
-    // DECIMAL VALIDATION
+    // DECIMAL
     // --------------------------------
 
-    if (value === ".") {
+    if (newValue === ".") {
 
-        // Don't allow a decimal immediately
-        // after a closing parenthesis.
-        if (previousChar === ")") {
+        // Don't put a decimal after ")"
+        if (before.endsWith(")")) {
             return;
         }
 
-        // Find the number currently being typed.
-        const currentNumber =
+        // Find the number immediately before
+        // the cursor.
+        const leftNumber =
             before.split(/[+\-*/()]/).pop();
 
-        // Don't allow another decimal point
-        // inside the same number.
-        if (currentNumber.includes(".")) {
+        // Find the number immediately after
+        // the cursor.
+        const rightNumber =
+            after.split(/[+\-*/()]/)[0];
+
+        // If either side already contains a decimal,
+        // inserting another one would create
+        // something like 12.3.4
+        if (
+            leftNumber.includes(".") ||
+            rightNumber.includes(".")
+        ) {
             return;
         }
 
-        // If starting a new number with ".",
-        // automatically make it "0."
+        // If "." starts a new number,
+        // turn it into "0."
         if (
-            !currentNumber &&
-            (
-                !previousChar ||
-                ["+", "-", "*", "/", "("].includes(previousChar)
+            !before ||
+            ["+", "-", "*", "/", "("].includes(
+                before.slice(-1)
             )
         ) {
-            value = "0.";
+            newValue = "0.";
         }
     }
 
     // --------------------------------
-    // OPERATOR VALIDATION
+    // OPERATORS
     // --------------------------------
 
-    if (["+", "-", "*", "/"].includes(value)) {
+    if (
+        ["+", "-", "*", "/"].includes(newValue)
+    ) {
 
-        // Don't allow operators at the beginning,
-        // except unary minus.
-        if (!previousChar && value !== "-") {
+        const previous =
+            before.slice(-1);
+
+        const next =
+            after.slice(0, 1);
+
+        // Only "-" is allowed to begin
+        // an expression as unary minus.
+        if (
+            !previous &&
+            newValue !== "-"
+        ) {
             return;
         }
 
-        // Don't allow two operators in a row.
+        // Don't allow two operators together.
         if (
-            ["+", "-", "*", "/"].includes(previousChar)
+            ["+", "-", "*", "/"].includes(previous)
         ) {
-            return;
+            // Allow unary minus after "("
+            if (
+                !(
+                    previous === "(" &&
+                    newValue === "-"
+                )
+            ) {
+                return;
+            }
         }
 
         // Don't allow an operator immediately
-        // after an opening parenthesis.
-        if (previousChar === "(" && value !== "-") {
-            return;
-        }
-    }
-
-    // --------------------------------
-    // CLOSING PARENTHESIS
-    // --------------------------------
-
-    if (value === ")") {
-
-        // Can't close an empty expression.
-        if (!expression) {
+        // before ")"
+        if (next === ")") {
             return;
         }
 
-        // Can't put ")" after an operator or "(".
+        // Don't allow + * / after "("
         if (
-            !previousChar ||
-            ["+", "-", "*", "/", "("].includes(previousChar)
+            previous === "(" &&
+            newValue !== "-"
         ) {
-            return;
-        }
-
-        // Check that we actually have an
-        // unmatched opening parenthesis.
-        const openCount =
-            (before.match(/\(/g) || []).length;
-
-        const closeCount =
-            (before.match(/\)/g) || []).length;
-
-        if (closeCount >= openCount) {
             return;
         }
     }
@@ -278,28 +316,89 @@ function append(value) {
     // OPENING PARENTHESIS
     // --------------------------------
 
-    if (value === "(") {
+    if (newValue === "(") {
 
-        // Don't allow "(" directly after a number
-        // or a closing parenthesis.
+        const previous =
+            before.slice(-1);
+
+        // Don't allow 2( or )(.
         if (
-            /[0-9)]/.test(previousChar)
+            /[0-9)]/.test(previous)
         ) {
             return;
         }
     }
 
     // --------------------------------
-    // INSERT CHARACTER
+    // CLOSING PARENTHESIS
     // --------------------------------
 
-    expression =
+    if (newValue === ")") {
+
+        const previous =
+            before.slice(-1);
+
+        // Must have something before it.
+        if (!previous) {
+            return;
+        }
+
+        // Can't be after an operator or "("
+        if (
+            ["+", "-", "*", "/", "("].includes(
+                previous
+            )
+        ) {
+            return;
+        }
+
+        // Count parentheses in the expression
+        // BEFORE inserting this one.
+        const openCount =
+            (before.match(/\(/g) || []).length;
+
+        const closeCount =
+            (before.match(/\)/g) || []).length;
+
+        // Can't close something that isn't open.
+        if (closeCount >= openCount) {
+            return;
+        }
+
+        // Don't allow "(2)3"
+        if (
+            after &&
+            /[0-9(]/.test(after[0])
+        ) {
+            return;
+        }
+    }
+
+    // --------------------------------
+    // BUILD CANDIDATE EXPRESSION
+    // --------------------------------
+
+    const candidate =
         before +
-        value +
+        newValue +
         after;
 
+    // --------------------------------
+    // FINAL VALIDATION
+    // --------------------------------
+
+    if (!isInputValid(candidate)) {
+        return;
+    }
+
+    // --------------------------------
+    // INSERT
+    // --------------------------------
+
+    expression = candidate;
+
     const newPosition =
-        start + value.length;
+        start + newValue.length;
 
     savedCursorStart =
         newPosition;
@@ -320,6 +419,124 @@ function append(value) {
     );
 }
 
+function isInputValid(input) {
+
+    if (!input) {
+        return true;
+    }
+
+    // --------------------------------
+    // INVALID CHARACTERS
+    // --------------------------------
+
+    if (
+        !/^[0-9+\-*/().]*$/.test(input)
+    ) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID DECIMAL PATTERNS
+    // --------------------------------
+
+    const numbers =
+        input.split(/[+\-*/()]/);
+
+    for (const number of numbers) {
+
+        if (!number) {
+            continue;
+        }
+
+        // More than one decimal in one number.
+        if (
+            (number.match(/\./g) || []).length > 1
+        ) {
+            return false;
+        }
+
+        // "." is not allowed by itself.
+        if (number === ".") {
+            return false;
+        }
+    }
+
+    // --------------------------------
+    // PARENTHESES
+    // --------------------------------
+
+    let balance = 0;
+
+    for (let i = 0; i < input.length; i++) {
+
+        const char = input[i];
+
+        if (char === "(") {
+            balance++;
+        }
+
+        if (char === ")") {
+
+            balance--;
+
+            // Closing before opening.
+            if (balance < 0) {
+                return false;
+            }
+        }
+    }
+
+    // Don't allow more closing than opening.
+    if (balance < 0) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID OPERATOR SEQUENCES
+    // --------------------------------
+
+    if (
+        /[+*/]{2}/.test(input)
+    ) {
+        return false;
+    }
+
+    // Two "-" operators can still be valid
+    // in cases like 5--2, so don't reject
+    // every double-minus automatically.
+
+    // --------------------------------
+    // INVALID OPERATOR BEFORE ")"
+    // --------------------------------
+
+    if (
+        /[+\-*/(]\)/.test(input)
+    ) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID "NUMBER("
+    // --------------------------------
+
+    if (
+        /[0-9]\(/.test(input)
+    ) {
+        return false;
+    }
+
+    // --------------------------------
+    // INVALID ")NUMBER"
+    // --------------------------------
+
+    if (
+        /\)[0-9(]/.test(input)
+    ) {
+        return false;
+    }
+
+    return true;
+}
 // ================================
 // CLEAR
 // ================================
