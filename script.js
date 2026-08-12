@@ -1048,7 +1048,7 @@ function calculate() {
 
 function percentage() {
 
-    if (!expression) {
+    if (!expression || expression === "Error") {
         return;
     }
 
@@ -1056,26 +1056,148 @@ function percentage() {
 
     try {
 
+        // Find the last number in the expression.
+        const match =
+            expression.match(
+                /(?:^|[+\-*/(])(-?\d*\.?\d+)$/
+            );
+
+        if (!match) {
+            return;
+        }
+
+        const numberText =
+            match[1];
+
         const value =
-            Number(expression);
+            Number(numberText);
 
         if (!Number.isFinite(value)) {
             return;
         }
 
-        expression =
-            String(value / 100);
+        // Position of the last number.
+        const numberStart =
+            expression.length - numberText.length;
 
-        render();
+        // Everything before the last number.
+        const before =
+            expression.slice(0, numberStart);
+
+        // Find the operator immediately before
+        // the number.
+        const operator =
+            before.slice(-1);
+
+        // --------------------------------
+        // SIMPLE NUMBER
+        // --------------------------------
+
+        if (
+            !operator ||
+            ["("].includes(operator)
+        ) {
+
+            expression =
+                String(value / 100);
+
+            justCalculated = false;
+
+            render();
+
+            return;
+        }
+
+        // --------------------------------
+        // ADDITION / SUBTRACTION
+        // --------------------------------
+        //
+        // 200 + 10%  →  200 + 20
+        // 200 - 10%  →  200 - 20
+        //
+        // The percentage is based on the
+        // value immediately before + or -.
+
+        if (
+            operator === "+" ||
+            operator === "-"
+        ) {
+
+            const baseExpression =
+                before.slice(0, -1);
+
+            try {
+
+                const baseTokens =
+                    tokenize(baseExpression);
+
+                const base =
+                    evaluate(baseTokens);
+
+                if (
+                    !Number.isFinite(base)
+                ) {
+                    return;
+                }
+
+                const percentageValue =
+                    base * value / 100;
+
+                expression =
+                    baseExpression +
+                    operator +
+                    String(
+                        Number(
+                            percentageValue
+                                .toPrecision(12)
+                        )
+                    );
+
+                justCalculated = false;
+
+                render();
+
+                return;
+
+            } catch {
+                return;
+            }
+        }
+
+        // --------------------------------
+        // MULTIPLICATION / DIVISION
+        // --------------------------------
+        //
+        // 200 × 10% → 200 × 0.1 → 20
+        // 200 ÷ 10% → 200 ÷ 0.1 → 2000
+
+        if (
+            operator === "*" ||
+            operator === "/"
+        ) {
+
+            expression =
+                before +
+                String(
+                    Number(
+                        (value / 100)
+                            .toPrecision(12)
+                    )
+                );
+
+            justCalculated = false;
+
+            render();
+
+            return;
+        }
 
     }
 
     catch {
-        expression = "Error";
-        render();
+        return;
     }
 }
-
 
 // ================================
 // PLUS / MINUS
