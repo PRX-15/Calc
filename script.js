@@ -12,6 +12,49 @@ const copyToast =
     document.getElementById("copyToast");
 
 const themeButton = document.getElementById("themeButton");
+
+// ================================
+// DARK / LIGHT THEME TOGGLE
+// ================================
+
+const savedTheme =
+    localStorage.getItem("calcTheme");
+
+if (savedTheme === "light") {
+    document.body.classList.add("light");
+}
+
+themeButton.addEventListener("click", () => {
+
+    const switchTheme = () => {
+
+        document.body.classList.toggle("light");
+
+        const isLight =
+            document.body.classList.contains("light");
+
+        localStorage.setItem(
+            "calcTheme",
+            isLight ? "light" : "dark"
+        );
+    };
+
+
+    // Use the View Transition API when available
+    // for a smooth whole-screen theme transition.
+    if (
+        document.startViewTransition
+    ) {
+        document.startViewTransition(
+            switchTheme
+        );
+    } else {
+        switchTheme();
+    }
+
+});
+
+
 const historyButton = document.getElementById("historyButton");
 
 const historyOverlay = document.getElementById("historyOverlay");
