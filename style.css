@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -53,7 +55,8 @@ body {
         "Segoe UI",
         sans-serif;
 
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     transition:
         background .25s ease,
@@ -75,7 +78,7 @@ body {
     padding:
         max(18px, env(safe-area-inset-top))
         max(16px, env(safe-area-inset-right))
-        max(18px, env(safe-area-inset-bottom))
+        calc(max(18px, env(safe-area-inset-bottom)) + 12px)
         max(16px, env(safe-area-inset-left));
 }
 
@@ -261,6 +264,10 @@ header {
 
     color: var(--text);
 
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
     font-size: clamp(42px, 11vw, 58px);
 
     font-weight: 500;
@@ -268,6 +275,50 @@ header {
     text-align: right;
 
     line-height: 1.05;
+
+    transform: translateY(5px);
+}
+
+#liveResult {
+    min-height: 22px;
+
+    margin-top: 2px;
+    padding-right: 2px;
+
+    color: var(--text);
+
+    opacity: 0;
+
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+
+    text-align: right;
+
+    transform:
+        translateY(8px)
+        scale(.94);
+
+    transform-origin: right center;
+
+    pointer-events: none;
+
+    transition:
+        opacity .18s ease,
+        transform .22s cubic-bezier(.2,.8,.2,1);
+}
+
+
+#liveResult.visible {
+    opacity: .45;
+
+    transform:
+        translateY(0)
+        scale(1);
 }
 
 
@@ -604,15 +655,34 @@ header {
 
 .result-animation {
     animation:
-        resultPop .2s ease;
+        resultPop .32s cubic-bezier(.2,.8,.2,1);
 }
 
 @keyframes resultPop {
 
-    50% {
-        transform: scale(1.04);
+    0% {
+        opacity: .45;
+
+        transform:
+            translateY(10px)
+            scale(.92);
     }
 
+    55% {
+        opacity: 1;
+
+        transform:
+            translateY(2px)
+            scale(1.06);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translateY(5px)
+            scale(1);
+    }
 }
 
 
@@ -620,7 +690,7 @@ header {
    SMALL PHONES
 ========================= */
 
-@media (max-height: 700px) {
+@media (max-height: 600px) {
 
     header {
         padding-bottom: 8px;
@@ -647,36 +717,4 @@ header {
 
         border-radius: 17px;
     }
-}
-
-/* ================================
-   LIVE CALCULATION RESULT
-================================ */
-
-.live-result {
-    min-height: 26px;
-    margin-top: 4px;
-
-    color: var(--accent);
-
-    font-size: 22px;
-    font-weight: 650;
-
-    text-align: right;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    opacity: 0;
-    transform: translateY(-3px);
-
-    transition:
-        opacity 0.15s ease,
-        transform 0.15s ease;
-}
-
-.live-result.visible {
-    opacity: 1;
-    transform: translateY(0);
 }
