@@ -500,7 +500,7 @@ header {
 
     animation:
         buttonTapGlow
-        .55s
+        .75s
         cubic-bezier(.22,1,.36,1)
         forwards;
 }
