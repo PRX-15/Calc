@@ -405,27 +405,29 @@ header {
     content: "";
 
     position: absolute;
-
-    inset: 0;
+    inset: -2px;
 
     border-radius: inherit;
 
     pointer-events: none;
 
-    background: radial-gradient(
-        circle at center,
-        rgba(255,255,255,.10) 0%,
-        rgba(255,255,255,.045) 38%,
-        transparent 72%
-    );
+    /* The actual glowing border */
+    border: 1px solid rgba(255, 255, 255, 0.45);
+
+    /* Soft light spreading OUT from the border */
+    box-shadow:
+        0 0 5px rgba(255, 255, 255, 0.20),
+        0 0 12px rgba(255, 255, 255, 0.12),
+        0 0 24px rgba(255, 255, 255, 0.06);
 
     opacity: 0;
 
-    transform: scale(.65);
+    transform: scale(0.98);
 
     transition:
-        opacity .12s ease-out,
-        transform .18s cubic-bezier(.2,.8,.2,1);
+        opacity 0.12s ease-out,
+        transform 0.18s cubic-bezier(.2,.8,.2,1),
+        box-shadow 0.18s ease-out;
 }
 
 /* Active state controlled by JavaScript */
@@ -438,7 +440,12 @@ header {
 .buttons button.is-pressed::after {
     opacity: 1;
 
-    transform: scale(1.08);
+    transform: scale(1.015);
+
+    box-shadow:
+        0 0 6px rgba(255, 255, 255, 0.28),
+        0 0 14px rgba(255, 255, 255, 0.18),
+        0 0 28px rgba(255, 255, 255, 0.09);
 }
 
 .buttons .utility {
