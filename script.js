@@ -26,11 +26,19 @@ if (savedTheme === "light") {
 
 themeButton.addEventListener("click", () => {
 
-    document.body.classList.toggle("light");
+    const isCurrentlyLight =
+        document.body.classList.contains("light");
+
+    // Toggle the entire page theme at once.
+    document.body.classList.toggle(
+        "light",
+        !isCurrentlyLight
+    );
 
     const isLight =
         document.body.classList.contains("light");
 
+    // Remember the selected theme.
     localStorage.setItem(
         "calcTheme",
         isLight ? "light" : "dark"
