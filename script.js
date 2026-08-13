@@ -8,6 +8,8 @@ const liveResult =
     document.getElementById("liveResult");
 const copyResultButton =
     document.getElementById("copyResult");
+const copyToast =
+    document.getElementById("copyToast");
 
 const themeButton = document.getElementById("themeButton");
 const historyButton = document.getElementById("historyButton");
@@ -220,6 +222,17 @@ async function copyResult() {
             "aria-label",
             "Result copied"
         );
+
+        copyToast.classList.remove("visible");
+
+// Restart the animation if copied repeatedly.
+void copyToast.offsetWidth;
+
+copyToast.classList.add("visible");
+
+setTimeout(() => {
+    copyToast.classList.remove("visible");
+}, 1000);
 
         setTimeout(() => {
 
