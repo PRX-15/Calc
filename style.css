@@ -1015,3 +1015,154 @@ body.light .buttons .utility,
 body.light .buttons .operator {
     background: rgba(220,220,227,.72);
 }
+
+/* =========================================
+   CUSTOM DARK / LIGHT THEME TOGGLE
+========================================= */
+
+#themeButton.theme-toggle {
+    position: relative;
+
+    width: 76px;
+    height: 38px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 999px;
+
+    background: #101014;
+
+    overflow: visible;
+
+    display: block;
+
+    cursor: pointer;
+
+    transform: none;
+
+    box-shadow:
+        inset 0 1px 2px rgba(255,255,255,.025),
+        0 0 14px rgba(20,20,30,.30);
+
+    transition:
+        background .55s cubic-bezier(.22,1,.36,1),
+        box-shadow .75s cubic-bezier(.22,1,.36,1);
+}
+
+
+/* =========================================
+   THE CIRCULAR IMAGE
+========================================= */
+
+#themeButton .theme-toggle-icon {
+    position: absolute;
+
+    top: 50%;
+
+    width: 48px;
+    height: 48px;
+
+    object-fit: contain;
+
+    transform:
+        translateY(-50%);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    transition:
+        left .65s cubic-bezier(.22,1,.36,1),
+        opacity .35s ease,
+        filter .75s cubic-bezier(.22,1,.36,1),
+        transform .65s cubic-bezier(.22,1,.36,1);
+}
+
+
+/* =========================================
+   DARK MODE
+   Moon sits on the RIGHT
+========================================= */
+
+body:not(.light) #themeButton .dark-toggle-icon {
+    left: 31px;
+
+    opacity: 1;
+
+    filter:
+        drop-shadow(0 0 5px rgba(255,255,255,.12))
+        drop-shadow(0 0 14px rgba(90,90,110,.18));
+
+    transform:
+        translateY(-50%)
+        scale(1);
+}
+
+body:not(.light) #themeButton .light-toggle-icon {
+    left: -3px;
+
+    opacity: 0;
+
+    filter:
+        drop-shadow(0 0 2px rgba(255,255,255,0));
+
+    transform:
+        translateY(-50%)
+        scale(.82);
+}
+
+
+/* =========================================
+   LIGHT MODE
+   Sun sits on the LEFT
+========================================= */
+
+body.light #themeButton {
+    background: #eeeeF2;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,.05),
+        0 0 14px rgba(220,220,235,.55);
+}
+
+body.light #themeButton .dark-toggle-icon {
+    left: 31px;
+
+    opacity: 0;
+
+    filter:
+        drop-shadow(0 0 2px rgba(0,0,0,0));
+
+    transform:
+        translateY(-50%)
+        scale(.82);
+}
+
+body.light #themeButton .light-toggle-icon {
+    left: -3px;
+
+    opacity: 1;
+
+    filter:
+        drop-shadow(0 0 5px rgba(255,255,255,.75))
+        drop-shadow(0 0 14px rgba(220,220,235,.55));
+
+    transform:
+        translateY(-50%)
+        scale(1);
+}
+
+
+/* =========================================
+   SMOOTH PRESS
+========================================= */
+
+#themeButton.theme-toggle:active {
+    transform: scale(.94);
+
+    transition:
+        transform .12s cubic-bezier(.2,.8,.2,1),
+        background .55s cubic-bezier(.22,1,.36,1),
+        box-shadow .75s cubic-bezier(.22,1,.36,1);
+}
