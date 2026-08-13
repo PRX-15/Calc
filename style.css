@@ -400,34 +400,114 @@ header {
         box-shadow .18s ease;
 }
 
-/* The light coming directly from the button */
+/* ================================
+   BUTTON EDGE GLOW
+================================ */
+
 .buttons button::after {
     content: "";
 
     position: absolute;
-    inset: -2px;
+    inset: -6px;
 
     border-radius: inherit;
 
     pointer-events: none;
 
-    /* The actual glowing border */
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    /* Very subtle edge — NOT a white border */
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
-    /* Soft light spreading OUT from the border */
     box-shadow:
-        0 0 5px rgba(255, 255, 255, 0.20),
-        0 0 12px rgba(255, 255, 255, 0.12),
-        0 0 24px rgba(255, 255, 255, 0.06);
+        0 0 7px rgba(255, 255, 255, 0.10),
+        0 0 14px rgba(255, 255, 255, 0.055);
 
     opacity: 0;
 
-    transform: scale(0.98);
+    transform: scale(.985);
 
     transition:
-        opacity 0.12s ease-out,
-        transform 0.18s cubic-bezier(.2,.8,.2,1),
-        box-shadow 0.18s ease-out;
+        opacity .18s cubic-bezier(.2,.8,.2,1),
+        transform .22s cubic-bezier(.2,.8,.2,1),
+        box-shadow .22s ease;
+}
+
+
+/* ================================
+   HOLD GLOW
+================================ */
+
+.buttons button.is-pressed::after {
+    opacity: 1;
+
+    transform: scale(1.015);
+
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.13),
+        0 0 16px rgba(255, 255, 255, 0.075),
+        0 0 25px rgba(255, 255, 255, 0.035);
+}
+
+
+/* ================================
+   INDIVIDUAL TAP PULSE
+================================ */
+
+.tap-glow {
+    position: absolute;
+
+    inset: -6px;
+
+    border-radius: inherit;
+
+    pointer-events: none;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.14),
+        0 0 16px rgba(255, 255, 255, 0.075),
+        0 0 25px rgba(255, 255, 255, 0.035);
+
+    opacity: 0;
+
+    transform: scale(.96);
+
+    animation: buttonTapGlow .32s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+
+@keyframes buttonTapGlow {
+
+    0% {
+        opacity: 0;
+
+        transform: scale(.96);
+
+        box-shadow:
+            0 0 3px rgba(255, 255, 255, 0.04),
+            0 0 7px rgba(255, 255, 255, 0.025);
+    }
+
+    25% {
+        opacity: 1;
+
+        transform: scale(1);
+
+        box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.14),
+            0 0 16px rgba(255, 255, 255, 0.075),
+            0 0 25px rgba(255, 255, 255, 0.035);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform: scale(1.035);
+
+        box-shadow:
+            0 0 10px rgba(255, 255, 255, 0.02),
+            0 0 20px rgba(255, 255, 255, 0);
+    }
 }
 
 /* Active state controlled by JavaScript */
@@ -437,16 +517,7 @@ header {
     filter: brightness(1.05);
 }
 
-.buttons button.is-pressed::after {
-    opacity: 1;
 
-    transform: scale(1.015);
-
-    box-shadow:
-        0 0 6px rgba(255, 255, 255, 0.28),
-        0 0 14px rgba(255, 255, 255, 0.18),
-        0 0 28px rgba(255, 255, 255, 0.09);
-}
 
 .buttons .utility {
     background: var(--key2);
