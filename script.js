@@ -6,6 +6,8 @@ const display = document.getElementById("display");
 const expressionPreview = document.getElementById("expressionPreview");
 const liveResult =
     document.getElementById("liveResult");
+const copyResultButton =
+    document.getElementById("copyResult");
 
 const themeButton = document.getElementById("themeButton");
 const historyButton = document.getElementById("historyButton");
@@ -121,6 +123,11 @@ display.addEventListener(
     }
 );
 
+copyResultButton.addEventListener(
+    "click",
+    copyResult
+);
+
 
 // ================================
 // DISPLAY
@@ -161,6 +168,82 @@ function render(
     }
 
     updateLiveResult();
+}
+
+// ================================
+// COPY RESULT
+// ================================
+
+async function copyResult() {
+
+    let result = "";
+
+    // If we just calculated something,
+    // expression contains the final result.
+    if (
+        justCalculated &&
+        expression &&
+        expression !== "Error"
+    ) {
+        result = expression;
+    }
+
+    // Otherwise use the live result.
+    else if (
+        liveResult.textContent.trim()
+    ) {
+        result =
+            liveResult.textContent.trim();
+    }
+
+    // Nothing available to copy.
+    if (!result) {
+        return;
+    }
+
+    try {
+
+        await navigator.clipboard.writeText(
+            result
+        );
+
+        vibrate();
+
+        copyResultButton.classList.add(
+            "copied"
+        );
+
+        copyResultButton.textContent =
+            "✓";
+
+        copyResultButton.setAttribute(
+            "aria-label",
+            "Result copied"
+        );
+
+        setTimeout(() => {
+
+            copyResultButton.classList.remove(
+                "copied"
+            );
+
+            copyResultButton.textContent =
+                "⧉";
+
+            copyResultButton.setAttribute(
+                "aria-label",
+                "Copy result"
+            );
+
+        }, 1000);
+
+    } catch (error) {
+
+        console.error(
+            "Copy failed:",
+            error
+        );
+    }
 }
 
 

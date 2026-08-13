@@ -172,6 +172,8 @@ header {
 ========================= */
 
 .display-card {
+    position: relative;
+
     height: 132px;
 
     padding: 18px 16px 14px;
@@ -187,6 +189,53 @@ header {
     overflow: hidden;
 
     margin-bottom: 13px;
+}
+
+.copy-result {
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--key);
+
+    color: var(--muted);
+
+    font-size: 21px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        color .15s ease,
+        transform .1s ease;
+}
+
+.copy-result:active {
+    background: var(--key2);
+
+    color: var(--accent);
+
+    transform: scale(.94);
+}
+
+.copy-result.copied {
+    color: var(--accent);
+
+    border-color: var(--accent);
 }
 
 #expressionPreview {
