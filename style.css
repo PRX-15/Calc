@@ -397,46 +397,48 @@ header {
     transition:
         transform .14s cubic-bezier(.2,.8,.2,1),
         filter .14s ease,
-        background .2s ease;
+        box-shadow .18s ease;
 }
 
-/* Soft light surrounding the button */
+/* The light coming directly from the button */
 .buttons button::after {
     content: "";
 
     position: absolute;
 
-    inset: -7px;
+    inset: 0;
 
-    border-radius: 24px;
-
-    background: transparent;
-
-    box-shadow:
-        0 0 0 rgba(255,255,255,0);
-
-    opacity: 0;
+    border-radius: inherit;
 
     pointer-events: none;
 
+    background: radial-gradient(
+        circle at center,
+        rgba(255,255,255,.10) 0%,
+        rgba(255,255,255,.045) 38%,
+        transparent 72%
+    );
+
+    opacity: 0;
+
+    transform: scale(.65);
+
     transition:
-        opacity .08s ease,
-        box-shadow .16s ease;
+        opacity .12s ease-out,
+        transform .18s cubic-bezier(.2,.8,.2,1);
 }
 
-/* Tap / hold */
-.buttons button:active {
+/* Active state controlled by JavaScript */
+.buttons button.is-pressed {
     transform: scale(.94) translateY(2px);
 
-    filter: brightness(1.06);
+    filter: brightness(1.05);
 }
 
-.buttons button:active::after {
+.buttons button.is-pressed::after {
     opacity: 1;
 
-    box-shadow:
-        0 0 10px rgba(255,255,255,.15),
-        0 0 22px rgba(255,255,255,.08);
+    transform: scale(1.08);
 }
 
 .buttons .utility {
@@ -456,21 +458,25 @@ header {
         0 8px 22px rgba(124,92,255,.24);
 }
 
-.buttons .equals:active {
+.buttons .equals.is-pressed {
     background: var(--accent-dark);
 
     transform: scale(.94) translateY(2px);
 
-    filter: brightness(1.06);
+    filter: brightness(1.05);
 }
 
-.buttons .equals:active::after {
+.buttons .equals.is-pressed::after {
     opacity: 1;
 
-    box-shadow:
-        0 0 10px rgba(255,255,255,.15),
-        0 0 22px rgba(255,255,255,.08),
-        0 8px 18px rgba(124,92,255,.16);
+    transform: scale(1.08);
+
+    background: radial-gradient(
+        circle at center,
+        rgba(255,255,255,.12) 0%,
+        rgba(255,255,255,.05) 38%,
+        transparent 72%
+    );
 }
 
 .zero {
