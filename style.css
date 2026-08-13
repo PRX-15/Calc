@@ -278,11 +278,10 @@ header {
     transform: translateY(5px);
 }
 
-.live-result {
+#liveResult {
     min-height: 22px;
 
     margin-top: 2px;
-
     padding-right: 2px;
 
     color: var(--text);
@@ -294,9 +293,7 @@ header {
         sans-serif;
 
     font-size: 18px;
-
     font-weight: 500;
-
     line-height: 1;
 
     text-align: right;
@@ -314,7 +311,8 @@ header {
         transform .22s cubic-bezier(.2,.8,.2,1);
 }
 
-.live-result.visible {
+
+#liveResult.visible {
     opacity: .45;
 
     transform:
