@@ -12,41 +12,6 @@ const copyToast =
     document.getElementById("copyToast");
 
 const themeButton = document.getElementById("themeButton");
-
-// ================================
-// DARK / LIGHT THEME TOGGLE
-// ================================
-
-const savedTheme =
-    localStorage.getItem("calcTheme");
-
-if (savedTheme === "light") {
-    document.body.classList.add("light");
-}
-
-themeButton.addEventListener("click", () => {
-
-    const isCurrentlyLight =
-        document.body.classList.contains("light");
-
-    // Toggle the entire page theme at once.
-    document.body.classList.toggle(
-        "light",
-        !isCurrentlyLight
-    );
-
-    const isLight =
-        document.body.classList.contains("light");
-
-    // Remember the selected theme.
-    localStorage.setItem(
-        "calcTheme",
-        isLight ? "light" : "dark"
-    );
-
-});
-
-
 const historyButton = document.getElementById("historyButton");
 
 const historyOverlay = document.getElementById("historyOverlay");
