@@ -406,7 +406,12 @@ function append(value) {
         ) {
             return;
         }
+   
+        // Continue from the calculated result.
+    if (justCalculated) {
+        justCalculated = false;
     }
+}
 
     // --------------------------------
     // OPENING PARENTHESIS
