@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -261,6 +263,10 @@ header {
 
     color: var(--text);
 
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
     font-size: clamp(42px, 11vw, 58px);
 
     font-weight: 500;
@@ -268,6 +274,52 @@ header {
     text-align: right;
 
     line-height: 1.05;
+
+    transform: translateY(5px);
+}
+
+.live-result {
+    min-height: 22px;
+
+    margin-top: 2px;
+
+    padding-right: 2px;
+
+    color: var(--text);
+
+    opacity: 0;
+
+    font-family:
+        "Space Grotesk",
+        sans-serif;
+
+    font-size: 18px;
+
+    font-weight: 500;
+
+    line-height: 1;
+
+    text-align: right;
+
+    transform:
+        translateY(8px)
+        scale(.94);
+
+    transform-origin: right center;
+
+    pointer-events: none;
+
+    transition:
+        opacity .18s ease,
+        transform .22s cubic-bezier(.2,.8,.2,1);
+}
+
+.live-result.visible {
+    opacity: .45;
+
+    transform:
+        translateY(0)
+        scale(1);
 }
 
 
@@ -604,15 +656,34 @@ header {
 
 .result-animation {
     animation:
-        resultPop .2s ease;
+        resultPop .32s cubic-bezier(.2,.8,.2,1);
 }
 
 @keyframes resultPop {
 
-    50% {
-        transform: scale(1.04);
+    0% {
+        opacity: .45;
+
+        transform:
+            translateY(10px)
+            scale(.92);
     }
 
+    55% {
+        opacity: 1;
+
+        transform:
+            translateY(2px)
+            scale(1.06);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translateY(5px)
+            scale(1);
+    }
 }
 
 
