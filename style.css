@@ -1023,36 +1023,68 @@ body.light .buttons .operator {
 #themeButton.theme-toggle {
     position: relative;
 
-    width: 76px;
-    height: 38px;
+    /* Compact pill */
+    width: 64px !important;
+    height: 34px !important;
 
     padding: 0;
 
     border: 0;
     border-radius: 999px;
 
-    background: #101014;
+    background: #111116;
 
-    overflow: visible;
+    color: transparent;
 
     display: block;
 
-    cursor: pointer;
-
-    transform: none;
+    overflow: visible;
 
     box-shadow:
         inset 0 1px 2px rgba(255,255,255,.025),
-        0 0 14px rgba(20,20,30,.30);
+        0 0 12px rgba(20,20,30,.22);
+
+    cursor: pointer;
 
     transition:
-        background .55s cubic-bezier(.22,1,.36,1),
+        background .45s cubic-bezier(.22,1,.36,1),
+        box-shadow .75s cubic-bezier(.22,1,.36,1),
+        transform .12s cubic-bezier(.2,.8,.2,1);
+}
+
+
+/* =========================================
+   PILL TRACK
+========================================= */
+
+#themeButton.theme-toggle::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 50%;
+
+    width: 64px;
+    height: 26px;
+
+    border-radius: 999px;
+
+    background: #17171c;
+
+    transform: translateY(-50%);
+
+    box-shadow:
+        inset 0 1px 2px rgba(255,255,255,.025);
+
+    transition:
+        background .45s cubic-bezier(.22,1,.36,1),
         box-shadow .75s cubic-bezier(.22,1,.36,1);
 }
 
 
 /* =========================================
-   THE CIRCULAR IMAGE
+   KNOB IMAGES
 ========================================= */
 
 #themeButton .theme-toggle-icon {
@@ -1060,21 +1092,23 @@ body.light .buttons .operator {
 
     top: 50%;
 
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
 
     object-fit: contain;
-
-    transform:
-        translateY(-50%);
 
     border-radius: 50%;
 
     pointer-events: none;
 
+    z-index: 2;
+
+    transform:
+        translateY(-50%);
+
     transition:
         left .65s cubic-bezier(.22,1,.36,1),
-        opacity .35s ease,
+        opacity .28s ease,
         filter .75s cubic-bezier(.22,1,.36,1),
         transform .65s cubic-bezier(.22,1,.36,1);
 }
@@ -1082,17 +1116,33 @@ body.light .buttons .operator {
 
 /* =========================================
    DARK MODE
-   Moon sits on the RIGHT
+   Moon knob → RIGHT
 ========================================= */
 
+body:not(.light) #themeButton.theme-toggle {
+    background: #101014;
+
+    box-shadow:
+        inset 0 1px 2px rgba(255,255,255,.025),
+        0 0 14px rgba(35,35,50,.30);
+}
+
+body:not(.light) #themeButton.theme-toggle::before {
+    background: #15151a;
+
+    box-shadow:
+        inset 0 1px 2px rgba(255,255,255,.025),
+        0 0 8px rgba(35,35,50,.16);
+}
+
 body:not(.light) #themeButton .dark-toggle-icon {
-    left: 31px;
+    left: 27px;
 
     opacity: 1;
 
     filter:
-        drop-shadow(0 0 5px rgba(255,255,255,.12))
-        drop-shadow(0 0 14px rgba(90,90,110,.18));
+        drop-shadow(0 0 5px rgba(255,255,255,.10))
+        drop-shadow(0 0 13px rgba(70,70,90,.22));
 
     transform:
         translateY(-50%)
@@ -1100,12 +1150,11 @@ body:not(.light) #themeButton .dark-toggle-icon {
 }
 
 body:not(.light) #themeButton .light-toggle-icon {
-    left: -3px;
+    left: -5px;
 
     opacity: 0;
 
-    filter:
-        drop-shadow(0 0 2px rgba(255,255,255,0));
+    filter: none;
 
     transform:
         translateY(-50%)
@@ -1115,24 +1164,31 @@ body:not(.light) #themeButton .light-toggle-icon {
 
 /* =========================================
    LIGHT MODE
-   Sun sits on the LEFT
+   Sun knob → LEFT
 ========================================= */
 
-body.light #themeButton {
+body.light #themeButton.theme-toggle {
     background: #eeeeF2;
 
     box-shadow:
-        inset 0 1px 2px rgba(0,0,0,.05),
-        0 0 14px rgba(220,220,235,.55);
+        inset 0 1px 2px rgba(0,0,0,.045),
+        0 0 15px rgba(215,215,230,.55);
+}
+
+body.light #themeButton.theme-toggle::before {
+    background: #e3e3e9;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,.035),
+        0 0 8px rgba(215,215,230,.35);
 }
 
 body.light #themeButton .dark-toggle-icon {
-    left: 31px;
+    left: 27px;
 
     opacity: 0;
 
-    filter:
-        drop-shadow(0 0 2px rgba(0,0,0,0));
+    filter: none;
 
     transform:
         translateY(-50%)
@@ -1140,13 +1196,13 @@ body.light #themeButton .dark-toggle-icon {
 }
 
 body.light #themeButton .light-toggle-icon {
-    left: -3px;
+    left: -5px;
 
     opacity: 1;
 
     filter:
-        drop-shadow(0 0 5px rgba(255,255,255,.75))
-        drop-shadow(0 0 14px rgba(220,220,235,.55));
+        drop-shadow(0 0 5px rgba(255,255,255,.70))
+        drop-shadow(0 0 13px rgba(220,220,235,.55));
 
     transform:
         translateY(-50%)
@@ -1155,14 +1211,9 @@ body.light #themeButton .light-toggle-icon {
 
 
 /* =========================================
-   SMOOTH PRESS
+   PRESS
 ========================================= */
 
 #themeButton.theme-toggle:active {
     transform: scale(.94);
-
-    transition:
-        transform .12s cubic-bezier(.2,.8,.2,1),
-        background .55s cubic-bezier(.22,1,.36,1),
-        box-shadow .75s cubic-bezier(.22,1,.36,1);
 }
