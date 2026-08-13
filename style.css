@@ -440,9 +440,9 @@ header {
     border: 0;
 
     box-shadow:
-        0 0 16px rgba(255,255,255,.11),
-        0 0 30px rgba(255,255,255,.075),
-        0 0 48px rgba(255,255,255,.045);
+    0 0 18px rgba(255,255,255,.16),
+    0 0 34px rgba(255,255,255,.11),
+    0 0 52px rgba(255,255,255,.065);
 
     filter: blur(6px);
 
@@ -488,9 +488,9 @@ header {
     border: 0;
 
     box-shadow:
-        0 0 16px rgba(255,255,255,.11),
-        0 0 30px rgba(255,255,255,.075),
-        0 0 48px rgba(255,255,255,.045);
+    0 0 18px rgba(255,255,255,.16),
+    0 0 34px rgba(255,255,255,.11),
+    0 0 52px rgba(255,255,255,.065);
 
     filter: blur(6px);
 
@@ -500,7 +500,7 @@ header {
 
     animation:
         buttonTapGlow
-        .42s
+        .55s
         cubic-bezier(.22,1,.36,1)
         forwards;
 }
@@ -512,9 +512,9 @@ header {
 
 .buttons .equals::after {
     box-shadow:
-        0 0 16px rgba(124,92,255,.22),
-        0 0 30px rgba(124,92,255,.14),
-        0 0 48px rgba(124,92,255,.08);
+    0 0 18px rgba(124,92,255,.30),
+    0 0 34px rgba(124,92,255,.19),
+    0 0 52px rgba(124,92,255,.11);
 }
 
 
@@ -524,9 +524,9 @@ header {
 
 .buttons .equals .tap-glow {
     box-shadow:
-        0 0 16px rgba(124,92,255,.22),
-        0 0 30px rgba(124,92,255,.14),
-        0 0 48px rgba(124,92,255,.08);
+    0 0 18px rgba(124,92,255,.30),
+    0 0 34px rgba(124,92,255,.19),
+    0 0 52px rgba(124,92,255,.11);
 }
 
 
@@ -538,33 +538,25 @@ header {
 
     0% {
         opacity: 0;
-
         transform: scale(.94);
-
         filter: blur(8px);
     }
 
-    18% {
-        opacity: .85;
-
+    16% {
+        opacity: .95;
         transform: scale(.98);
-
         filter: blur(7px);
     }
 
-    45% {
-        opacity: .65;
-
+    48% {
+        opacity: .72;
         transform: scale(1.01);
-
         filter: blur(8px);
     }
 
     100% {
         opacity: 0;
-
         transform: scale(1.10);
-
         filter: blur(11px);
     }
 }
