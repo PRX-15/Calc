@@ -26,31 +26,15 @@ if (savedTheme === "light") {
 
 themeButton.addEventListener("click", () => {
 
-    const switchTheme = () => {
+    document.body.classList.toggle("light");
 
-        document.body.classList.toggle("light");
+    const isLight =
+        document.body.classList.contains("light");
 
-        const isLight =
-            document.body.classList.contains("light");
-
-        localStorage.setItem(
-            "calcTheme",
-            isLight ? "light" : "dark"
-        );
-    };
-
-
-    // Use the View Transition API when available
-    // for a smooth whole-screen theme transition.
-    if (
-        document.startViewTransition
-    ) {
-        document.startViewTransition(
-            switchTheme
-        );
-    } else {
-        switchTheme();
-    }
+    localStorage.setItem(
+        "calcTheme",
+        isLight ? "light" : "dark"
+    );
 
 });
 
