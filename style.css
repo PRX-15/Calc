@@ -404,7 +404,10 @@ header {
    ONEPLUS-STYLE BUTTON TAP GLOW
 ================================ */
 
-/* Keep the button itself clean */
+/* --------------------------------
+   BUTTON BASE
+-------------------------------- */
+
 .buttons button {
     position: relative;
     overflow: visible;
@@ -415,57 +418,61 @@ header {
 }
 
 
-/* =================================
+/* --------------------------------
    HOLD GLOW
-   Soft light coming OUT from edges
-================================= */
+   Pure diffuse light — NO border
+-------------------------------- */
 
 .buttons button::after {
     content: "";
 
     position: absolute;
+
     inset: -10%;
 
     border-radius: inherit;
 
     pointer-events: none;
 
-    /* NO visible border */
+    /* Invisible shape — only its blur is visible */
+    background: transparent;
+
     border: 0;
 
-    /* Soft diffuse light */
     box-shadow:
-        0 0 14px rgba(255,255,255,.10),
-        0 0 28px rgba(255,255,255,.065),
-        0 0 42px rgba(255,255,255,.035);
+        0 0 16px rgba(255,255,255,.11),
+        0 0 30px rgba(255,255,255,.075),
+        0 0 48px rgba(255,255,255,.045);
+
+    filter: blur(6px);
 
     opacity: 0;
 
-    transform: scale(.96);
+    transform: scale(.94);
 
     transition:
         opacity .16s cubic-bezier(.22,1,.36,1),
-        transform .22s cubic-bezier(.22,1,.36,1);
+        transform .20s cubic-bezier(.22,1,.36,1);
 }
 
 
-/* =================================
-   WHILE HOLDING
-================================= */
+/* --------------------------------
+   HOLD
+-------------------------------- */
 
 .buttons button.is-pressed::after {
     opacity: 1;
 
-    transform: scale(1.02);
+    transform: scale(1);
 }
 
 
-/* =================================
+/* --------------------------------
    INDIVIDUAL TAP GLOW
 
-   Every tap gets its own glow.
-   This allows rapid taps to overlap.
-================================= */
+   Every tap gets its own element,
+   so rapid taps can overlap.
+-------------------------------- */
 
 .tap-glow {
     position: absolute;
@@ -476,12 +483,16 @@ header {
 
     pointer-events: none;
 
+    background: transparent;
+
     border: 0;
 
     box-shadow:
-        0 0 14px rgba(255,255,255,.10),
-        0 0 28px rgba(255,255,255,.065),
-        0 0 42px rgba(255,255,255,.035);
+        0 0 16px rgba(255,255,255,.11),
+        0 0 30px rgba(255,255,255,.075),
+        0 0 48px rgba(255,255,255,.045);
+
+    filter: blur(6px);
 
     opacity: 0;
 
@@ -495,9 +506,33 @@ header {
 }
 
 
-/* =================================
+/* --------------------------------
+   EQUAL BUTTON = PURPLE GLOW
+-------------------------------- */
+
+.buttons .equals::after {
+    box-shadow:
+        0 0 16px rgba(124,92,255,.22),
+        0 0 30px rgba(124,92,255,.14),
+        0 0 48px rgba(124,92,255,.08);
+}
+
+
+/* --------------------------------
+   TAP GLOW FOR EQUAL BUTTON
+-------------------------------- */
+
+.buttons .equals .tap-glow {
+    box-shadow:
+        0 0 16px rgba(124,92,255,.22),
+        0 0 30px rgba(124,92,255,.14),
+        0 0 48px rgba(124,92,255,.08);
+}
+
+
+/* --------------------------------
    SMOOTH TAP PULSE
-================================= */
+-------------------------------- */
 
 @keyframes buttonTapGlow {
 
@@ -506,61 +541,43 @@ header {
 
         transform: scale(.94);
 
-        box-shadow:
-            0 0 5px rgba(255,255,255,.02),
-            0 0 12px rgba(255,255,255,.01);
+        filter: blur(8px);
     }
 
     18% {
-        opacity: .9;
+        opacity: .85;
 
         transform: scale(.98);
 
-        box-shadow:
-            0 0 14px rgba(255,255,255,.10),
-            0 0 28px rgba(255,255,255,.065),
-            0 0 42px rgba(255,255,255,.035);
+        filter: blur(7px);
     }
 
     45% {
-        opacity: .72;
+        opacity: .65;
 
-        transform: scale(1);
+        transform: scale(1.01);
 
-        box-shadow:
-            0 0 18px rgba(255,255,255,.085),
-            0 0 34px rgba(255,255,255,.05),
-            0 0 48px rgba(255,255,255,.025);
+        filter: blur(8px);
     }
 
     100% {
         opacity: 0;
 
-        transform: scale(1.08);
+        transform: scale(1.10);
 
-        box-shadow:
-            0 0 22px rgba(255,255,255,0),
-            0 0 42px rgba(255,255,255,0),
-            0 0 60px rgba(255,255,255,0);
+        filter: blur(11px);
     }
 }
 
 
-/* =================================
+/* --------------------------------
    BUTTON SHRINK
-================================= */
+-------------------------------- */
 
 .buttons button.is-pressed {
     transform: scale(.94) translateY(2px);
 
     filter: brightness(1.04);
-}
-
-/* Active state controlled by JavaScript */
-.buttons button.is-pressed {
-    transform: scale(.94) translateY(2px);
-
-    filter: brightness(1.05);
 }
 
 
