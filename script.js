@@ -8,6 +8,8 @@ const liveResult =
     document.getElementById("liveResult");
 const copyResultButton =
     document.getElementById("copyResult");
+const copyToast =
+    document.getElementById("copyToast");
 
 const themeButton = document.getElementById("themeButton");
 const historyButton = document.getElementById("historyButton");
