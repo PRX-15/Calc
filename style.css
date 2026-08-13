@@ -1322,3 +1322,25 @@ body.light #themeButton .light-toggle-icon {
 #themeButton.theme-toggle:active {
     transform: scale(.94);
 }
+
+/* ================================
+   SMOOTH DARK / LIGHT THEME CHANGE
+================================ */
+
+html,
+body,
+.calculator,
+.display-card,
+.round-button,
+.copy-result,
+.buttons button,
+.buttons .utility,
+.buttons .operator,
+.buttons .equals {
+    transition:
+        background-color .55s cubic-bezier(.22,1,.36,1),
+        background .55s cubic-bezier(.22,1,.36,1),
+        color .55s cubic-bezier(.22,1,.36,1),
+        border-color .55s cubic-bezier(.22,1,.36,1),
+        box-shadow .75s cubic-bezier(.22,1,.36,1);
+}
