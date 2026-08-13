@@ -59,8 +59,8 @@ body {
     overflow-y: auto;
 
     transition:
-        background .25s ease,
-        color .25s ease;
+        background-color .75s cubic-bezier(.22, 1, .36, 1),
+        color .75s cubic-bezier(.22, 1, .36, 1);
 }
 
 
@@ -1343,4 +1343,33 @@ body,
         color .55s cubic-bezier(.22,1,.36,1),
         border-color .55s cubic-bezier(.22,1,.36,1),
         box-shadow .75s cubic-bezier(.22,1,.36,1);
+}
+
+/* =================================
+   SMOOTH GLOBAL THEME TRANSITION
+================================= */
+
+/* Everything that uses the theme variables
+   transitions together with the page. */
+
+.app,
+header,
+.brand,
+.subtitle,
+.header-actions,
+.round-button,
+.calculator,
+.display-card,
+.copy-result,
+.copy-toast,
+.buttons button,
+#display,
+#expressionPreview,
+#liveResult {
+    transition:
+        background-color .75s cubic-bezier(.22, 1, .36, 1),
+        border-color .75s cubic-bezier(.22, 1, .36, 1),
+        color .75s cubic-bezier(.22, 1, .36, 1),
+        box-shadow .75s cubic-bezier(.22, 1, .36, 1),
+        filter .75s cubic-bezier(.22, 1, .36, 1);
 }
