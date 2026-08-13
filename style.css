@@ -146,6 +146,111 @@ header {
     transform: scale(.9);
 }
 
+/* ================================
+   DARK / LIGHT THEME TOGGLE
+================================ */
+
+.theme-toggle {
+    position: relative;
+    width: 72px;
+    height: 44px;
+
+    padding: 0;
+
+    border-radius: 999px;
+    overflow: hidden;
+
+    background: #111113;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.06),
+        0 0 18px rgba(0,0,0,.45);
+
+    transition:
+        background .55s cubic-bezier(.22,1,.36,1),
+        box-shadow .75s cubic-bezier(.22,1,.36,1),
+        transform .12s ease;
+}
+
+/* The circular image itself */
+.theme-toggle-icon {
+    position: absolute;
+
+    top: 3px;
+
+    width: 38px;
+    height: 38px;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    transition:
+        left .65s cubic-bezier(.22,1,.36,1),
+        opacity .45s ease,
+        transform .65s cubic-bezier(.22,1,.36,1);
+}
+
+/* DARK MODE */
+.dark-toggle-icon {
+    left: 31px;
+    opacity: 1;
+
+    transform: rotate(0deg) scale(1);
+}
+
+/* LIGHT ICON hidden initially */
+.light-toggle-icon {
+    left: 3px;
+    opacity: 0;
+
+    transform: rotate(-90deg) scale(.75);
+}
+
+
+/* ================================
+   LIGHT MODE TOGGLE
+================================ */
+
+body.light .theme-toggle {
+    background: #eeeeF2;
+
+    box-shadow:
+        0 0 0 1px rgba(0,0,0,.08),
+        0 0 18px rgba(255,255,255,.65),
+        0 0 34px rgba(255,255,255,.35);
+}
+
+/* Moon moves left and fades out */
+body.light .dark-toggle-icon {
+    left: 3px;
+
+    opacity: 0;
+
+    transform:
+        rotate(90deg)
+        scale(.75);
+}
+
+/* Sun/day image moves right and fades in */
+body.light .light-toggle-icon {
+    left: 31px;
+
+    opacity: 1;
+
+    transform:
+        rotate(0deg)
+        scale(1);
+}
+
+
+/* Slightly different press feel */
+.theme-toggle:active {
+    transform: scale(.93);
+}
+
 
 /* =========================
    CALCULATOR
