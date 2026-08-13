@@ -430,6 +430,13 @@ header {
     grid-column: span 2;
 }
 
+.history-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+}
+
 
 /* =========================
    HISTORY OVERLAY
