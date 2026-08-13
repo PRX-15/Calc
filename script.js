@@ -29,20 +29,41 @@ let justCalculated = false;
 document.querySelectorAll(".buttons button").forEach(button => {
 
     button.addEventListener("pointerdown", () => {
+
+        // Start the press/shrink state
         button.classList.add("is-pressed");
+
+        // Create a NEW glow for this tap.
+        // This allows multiple taps to overlap.
+        const glow = document.createElement("span");
+
+        glow.className = "tap-glow";
+
+        button.appendChild(glow);
+
+        // Remove this individual glow
+        // after its animation finishes.
+        glow.addEventListener("animationend", () => {
+            glow.remove();
+        }, { once: true });
+
     });
+
 
     button.addEventListener("pointerup", () => {
         button.classList.remove("is-pressed");
     });
 
+
     button.addEventListener("pointercancel", () => {
         button.classList.remove("is-pressed");
     });
 
+
     button.addEventListener("pointerleave", () => {
         button.classList.remove("is-pressed");
     });
+
 });
 
 let history = [];
