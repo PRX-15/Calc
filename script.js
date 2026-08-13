@@ -22,6 +22,29 @@ const clearHistoryButton = document.getElementById("clearHistory");
 let expression = "";
 let justCalculated = false;
 
+// ================================
+// BUTTON PRESS ANIMATION
+// ================================
+
+document.querySelectorAll(".buttons button").forEach(button => {
+
+    button.addEventListener("pointerdown", () => {
+        button.classList.add("is-pressed");
+    });
+
+    button.addEventListener("pointerup", () => {
+        button.classList.remove("is-pressed");
+    });
+
+    button.addEventListener("pointercancel", () => {
+        button.classList.remove("is-pressed");
+    });
+
+    button.addEventListener("pointerleave", () => {
+        button.classList.remove("is-pressed");
+    });
+});
+
 let history = [];
 
 try {
