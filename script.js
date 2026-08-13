@@ -223,6 +223,17 @@ async function copyResult() {
             "Result copied"
         );
 
+        copyToast.classList.remove("visible");
+
+// Restart the animation if copied repeatedly.
+void copyToast.offsetWidth;
+
+copyToast.classList.add("visible");
+
+setTimeout(() => {
+    copyToast.classList.remove("visible");
+}, 1000);
+
         setTimeout(() => {
 
             copyResultButton.classList.remove(
