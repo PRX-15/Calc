@@ -401,113 +401,159 @@ header {
 }
 
 /* ================================
-   BUTTON EDGE GLOW
+   ONEPLUS-STYLE BUTTON TAP GLOW
 ================================ */
+
+/* Keep the button itself clean */
+.buttons button {
+    position: relative;
+    overflow: visible;
+
+    transition:
+        transform .14s cubic-bezier(.2,.8,.2,1),
+        filter .18s ease;
+}
+
+
+/* =================================
+   HOLD GLOW
+   Soft light coming OUT from edges
+================================= */
 
 .buttons button::after {
     content: "";
 
     position: absolute;
-    inset: -6px;
+    inset: -10%;
 
     border-radius: inherit;
 
     pointer-events: none;
 
-    /* Very subtle edge — NOT a white border */
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* NO visible border */
+    border: 0;
 
+    /* Soft diffuse light */
     box-shadow:
-        0 0 7px rgba(255, 255, 255, 0.10),
-        0 0 14px rgba(255, 255, 255, 0.055);
-
-    opacity: 0;
-
-    transform: scale(.985);
-
-    transition:
-        opacity .18s cubic-bezier(.2,.8,.2,1),
-        transform .22s cubic-bezier(.2,.8,.2,1),
-        box-shadow .22s ease;
-}
-
-
-/* ================================
-   HOLD GLOW
-================================ */
-
-.buttons button.is-pressed::after {
-    opacity: 1;
-
-    transform: scale(1.015);
-
-    box-shadow:
-        0 0 8px rgba(255, 255, 255, 0.13),
-        0 0 16px rgba(255, 255, 255, 0.075),
-        0 0 25px rgba(255, 255, 255, 0.035);
-}
-
-
-/* ================================
-   INDIVIDUAL TAP PULSE
-================================ */
-
-.tap-glow {
-    position: absolute;
-
-    inset: -6px;
-
-    border-radius: inherit;
-
-    pointer-events: none;
-
-    border: 1px solid rgba(255, 255, 255, 0.07);
-
-    box-shadow:
-        0 0 8px rgba(255, 255, 255, 0.14),
-        0 0 16px rgba(255, 255, 255, 0.075),
-        0 0 25px rgba(255, 255, 255, 0.035);
+        0 0 14px rgba(255,255,255,.10),
+        0 0 28px rgba(255,255,255,.065),
+        0 0 42px rgba(255,255,255,.035);
 
     opacity: 0;
 
     transform: scale(.96);
 
-    animation: buttonTapGlow .32s cubic-bezier(.2,.8,.2,1) forwards;
+    transition:
+        opacity .16s cubic-bezier(.22,1,.36,1),
+        transform .22s cubic-bezier(.22,1,.36,1);
 }
 
+
+/* =================================
+   WHILE HOLDING
+================================= */
+
+.buttons button.is-pressed::after {
+    opacity: 1;
+
+    transform: scale(1.02);
+}
+
+
+/* =================================
+   INDIVIDUAL TAP GLOW
+
+   Every tap gets its own glow.
+   This allows rapid taps to overlap.
+================================= */
+
+.tap-glow {
+    position: absolute;
+
+    inset: -10%;
+
+    border-radius: inherit;
+
+    pointer-events: none;
+
+    border: 0;
+
+    box-shadow:
+        0 0 14px rgba(255,255,255,.10),
+        0 0 28px rgba(255,255,255,.065),
+        0 0 42px rgba(255,255,255,.035);
+
+    opacity: 0;
+
+    transform: scale(.94);
+
+    animation:
+        buttonTapGlow
+        .42s
+        cubic-bezier(.22,1,.36,1)
+        forwards;
+}
+
+
+/* =================================
+   SMOOTH TAP PULSE
+================================= */
 
 @keyframes buttonTapGlow {
 
     0% {
         opacity: 0;
 
-        transform: scale(.96);
+        transform: scale(.94);
 
         box-shadow:
-            0 0 3px rgba(255, 255, 255, 0.04),
-            0 0 7px rgba(255, 255, 255, 0.025);
+            0 0 5px rgba(255,255,255,.02),
+            0 0 12px rgba(255,255,255,.01);
     }
 
-    25% {
-        opacity: 1;
+    18% {
+        opacity: .9;
+
+        transform: scale(.98);
+
+        box-shadow:
+            0 0 14px rgba(255,255,255,.10),
+            0 0 28px rgba(255,255,255,.065),
+            0 0 42px rgba(255,255,255,.035);
+    }
+
+    45% {
+        opacity: .72;
 
         transform: scale(1);
 
         box-shadow:
-            0 0 8px rgba(255, 255, 255, 0.14),
-            0 0 16px rgba(255, 255, 255, 0.075),
-            0 0 25px rgba(255, 255, 255, 0.035);
+            0 0 18px rgba(255,255,255,.085),
+            0 0 34px rgba(255,255,255,.05),
+            0 0 48px rgba(255,255,255,.025);
     }
 
     100% {
         opacity: 0;
 
-        transform: scale(1.035);
+        transform: scale(1.08);
 
         box-shadow:
-            0 0 10px rgba(255, 255, 255, 0.02),
-            0 0 20px rgba(255, 255, 255, 0);
+            0 0 22px rgba(255,255,255,0),
+            0 0 42px rgba(255,255,255,0),
+            0 0 60px rgba(255,255,255,0);
     }
+}
+
+
+/* =================================
+   BUTTON SHRINK
+================================= */
+
+.buttons button.is-pressed {
+    transform: scale(.94) translateY(2px);
+
+    filter: brightness(1.04);
 }
 
 /* Active state controlled by JavaScript */
@@ -542,19 +588,6 @@ header {
     transform: scale(.94) translateY(2px);
 
     filter: brightness(1.05);
-}
-
-.buttons .equals.is-pressed::after {
-    opacity: 1;
-
-    transform: scale(1.08);
-
-    background: radial-gradient(
-        circle at center,
-        rgba(255,255,255,.12) 0%,
-        rgba(255,255,255,.05) 38%,
-        transparent 72%
-    );
 }
 
 .zero {
