@@ -1222,3 +1222,292 @@ body.light .buttons .operator {
     background: rgba(220,220,227,.72);
 }
 
+
+
+
+/* =========================================================
+   LIGHT MODE — FINAL OVERRIDES
+   These rules intentionally come LAST so they override
+   the glass/dark-mode defaults above.
+========================================================= */
+
+body.light {
+
+    background: #f4f4f7;
+
+    color: #16161a;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+body.light .brand {
+    color: #16161a;
+}
+
+body.light .subtitle {
+    color: #707078;
+}
+
+
+/* =========================
+   HISTORY BUTTON
+========================= */
+
+body.light .round-button {
+    background: rgba(255,255,255,.82);
+
+    border: 1px solid rgba(0,0,0,.08);
+
+    color: #16161a;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.08),
+        inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+
+/* =========================
+   CALCULATOR CARD
+========================= */
+
+body.light .calculator {
+    background: rgba(255,255,255,.82);
+
+    border: 1px solid rgba(0,0,0,.08);
+
+    box-shadow:
+        0 24px 70px rgba(0,0,0,.12),
+        inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+
+/* =========================
+   DISPLAY
+========================= */
+
+body.light .display-card {
+    background: rgba(240,240,243,.90);
+
+    border: 1px solid rgba(0,0,0,.04);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+body.light #display {
+    color: #16161a;
+}
+
+body.light #expressionPreview {
+    color: #707078;
+}
+
+body.light #liveResult {
+    color: #16161a;
+}
+
+
+/* =========================
+   COPY BUTTON
+========================= */
+
+body.light .copy-result {
+    background: rgba(231,231,236,.88);
+
+    border: 1px solid rgba(0,0,0,.07);
+
+    color: #707078;
+}
+
+body.light .copy-result:active {
+    background: #dcdce3;
+
+    color: #604eea;
+}
+
+body.light .copy-result.copied {
+    color: #604eea;
+
+    border-color: #604eea;
+}
+
+
+/* =========================
+   CALCULATOR BUTTONS
+========================= */
+
+body.light .buttons button {
+    background: rgba(231,231,236,.88);
+
+    color: #16161a;
+
+    border: 0;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.75),
+        0 2px 8px rgba(0,0,0,.05);
+}
+
+
+/* Utility buttons */
+
+body.light .buttons .utility {
+    background: rgba(220,220,227,.92);
+
+    color: #707078;
+}
+
+
+/* Operator buttons */
+
+body.light .buttons .operator {
+    background: rgba(220,220,227,.92);
+
+    color: #16161a;
+}
+
+
+/* Equals button */
+
+body.light .buttons .equals {
+    background: #604eea;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 22px rgba(96,78,234,.22);
+}
+
+
+/* Equals pressed state */
+
+body.light .buttons .equals.is-pressed {
+    background: #513bd1;
+
+    color: #ffffff;
+}
+
+
+/* =========================
+   BUTTON TAP GLOW
+========================= */
+
+/* Normal light-mode button glow */
+
+body.light .buttons button::after {
+    box-shadow:
+        0 0 18px rgba(0,0,0,.08),
+        0 0 34px rgba(0,0,0,.055),
+        0 0 52px rgba(0,0,0,.035);
+}
+
+
+/* Normal light-mode tap glow */
+
+body.light .buttons button .tap-glow {
+    box-shadow:
+        0 0 18px rgba(0,0,0,.08),
+        0 0 34px rgba(0,0,0,.055),
+        0 0 52px rgba(0,0,0,.035);
+}
+
+
+/* Keep equals purple glow */
+
+body.light .buttons .equals::after {
+    box-shadow:
+        0 0 18px rgba(96,78,234,.25),
+        0 0 34px rgba(96,78,234,.16),
+        0 0 52px rgba(96,78,234,.09);
+}
+
+body.light .buttons .equals .tap-glow {
+    box-shadow:
+        0 0 18px rgba(96,78,234,.25),
+        0 0 34px rgba(96,78,234,.16),
+        0 0 52px rgba(96,78,234,.09);
+}
+
+
+/* =========================
+   HISTORY PANEL
+========================= */
+
+body.light .history-overlay {
+    background: rgba(0,0,0,.32);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+body.light .history-panel {
+    background: rgba(255,255,255,.92);
+
+    border-color: rgba(0,0,0,.08);
+
+    box-shadow:
+        0 -20px 60px rgba(0,0,0,.16);
+}
+
+body.light .close-button {
+    background: #e7e7ec;
+
+    color: #16161a;
+}
+
+body.light .history-expression {
+    color: #707078;
+}
+
+body.light .history-time {
+    color: #707078;
+}
+
+body.light .history-result {
+    color: #16161a;
+}
+
+body.light .history-item {
+    border-bottom-color: rgba(0,0,0,.08);
+}
+
+body.light .history-item:active {
+    background: rgba(0,0,0,.04);
+}
+
+body.light .empty-history {
+    color: #707078;
+}
+
+body.light .clear-history {
+    color: #d93d45;
+
+    border-color: rgba(217,61,69,.40);
+}
+
+
+/* =========================
+   LIGHT MODE THEME TOGGLE
+========================= */
+
+body.light .theme-toggle {
+    /* Keep your existing light toggle appearance */
+    background:
+        linear-gradient(
+            135deg,
+            #f9f8f2 0%,
+            #efe2a9 55%,
+            #f7c978 100%
+        );
+
+    border-color: rgba(0,0,0,.08);
+
+    box-shadow:
+        inset 0 2px 8px rgba(255,255,255,.48),
+        inset 0 -10px 18px rgba(0,0,0,.12),
+        0 10px 28px rgba(0,0,0,.14);
+}
+
