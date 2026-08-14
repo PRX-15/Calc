@@ -152,92 +152,118 @@ header {
 
 .theme-toggle {
     position: relative;
-    width: 72px;
-    height: 44px;
 
-    padding: 0;
+    width: 88px;
+    height: 48px;
 
+    padding: 4px;
+
+    border: 1px solid rgba(255,255,255,.1);
     border-radius: 999px;
     overflow: hidden;
 
-    background: #111113;
+    background:
+        linear-gradient(
+            135deg,
+            #11131c 0%,
+            #242946 62%,
+            #4c3bc5 100%
+        );
+
+    cursor: pointer;
+
+    display: block;
+    flex: 0 0 auto;
 
     box-shadow:
-        0 0 0 1px rgba(255,255,255,.06),
-        0 0 18px rgba(0,0,0,.45);
+        inset 0 2px 8px rgba(255,255,255,.08),
+        inset 0 -12px 20px rgba(0,0,0,.32),
+        0 10px 28px rgba(0,0,0,.22);
 
     transition:
-        background .55s cubic-bezier(.22,1,.36,1),
-        box-shadow .75s cubic-bezier(.22,1,.36,1),
+        background .65s cubic-bezier(.22,1,.36,1),
+        box-shadow .65s cubic-bezier(.22,1,.36,1),
         transform .12s ease;
 }
 
-/* The circular image itself */
-.theme-toggle-icon {
+
+/* Glass highlight across the pill */
+
+.theme-toggle::before {
+    content: "";
+
     position: absolute;
 
-    top: 3px;
+    inset: 0;
 
-    width: 38px;
-    height: 38px;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.28)
+        );
 
-    object-fit: contain;
-
-    border-radius: 50%;
+    opacity: .45;
 
     pointer-events: none;
 
     transition:
-        left .65s cubic-bezier(.22,1,.36,1),
-        opacity .45s ease,
+        opacity .65s cubic-bezier(.22,1,.36,1),
         transform .65s cubic-bezier(.22,1,.36,1);
 }
 
-/* DARK MODE */
-.dark-toggle-icon {
-    left: 31px;
-    opacity: 1;
 
-    transform: rotate(0deg) scale(1);
-}
+/* The single circular image head */
 
-/* LIGHT ICON hidden initially */
-.light-toggle-icon {
-    left: 3px;
-    opacity: 0;
+.theme-toggle-head {
+    position: absolute;
 
-    transform: rotate(-90deg) scale(.75);
-}
+    top: 4px;
+    left: 4px;
 
+    width: 38px;
+    height: 38px;
 
-/* ================================
-   LIGHT MODE TOGGLE
-================================ */
+    border-radius: 50%;
+    overflow: hidden;
 
-body.light .theme-toggle {
-    background: #eeeeF2;
+    background: var(--card);
 
     box-shadow:
-        0 0 0 1px rgba(0,0,0,.08),
-        0 0 18px rgba(255,255,255,.65),
-        0 0 34px rgba(255,255,255,.35);
+        0 7px 16px rgba(0,0,0,.28),
+        0 0 0 2px rgba(255,255,255,.22);
+
+    pointer-events: none;
+
+    transform: translateX(40px);
+
+    transition:
+        transform .68s cubic-bezier(.22,1,.36,1),
+        box-shadow .65s cubic-bezier(.22,1,.36,1);
 }
 
-/* Moon moves left and fades out */
-body.light .dark-toggle-icon {
-    left: 3px;
 
-    opacity: 0;
+/* Images crossfade/rotate inside the same circle */
 
-    transform:
-        rotate(90deg)
-        scale(.75);
+.theme-toggle-icon {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        opacity .34s ease,
+        transform .68s cubic-bezier(.22,1,.36,1);
 }
 
-/* Sun/day image moves right and fades in */
-body.light .light-toggle-icon {
-    left: 31px;
 
+/* DARK MODE */
+
+.dark-toggle-icon {
     opacity: 1;
 
     transform:
@@ -246,7 +272,79 @@ body.light .light-toggle-icon {
 }
 
 
-/* Slightly different press feel */
+.light-toggle-icon {
+    opacity: 0;
+
+    transform:
+        rotate(-90deg)
+        scale(.78);
+}
+
+
+/* ================================
+   LIGHT MODE TOGGLE
+================================ */
+
+body.light .theme-toggle {
+    background:
+        linear-gradient(
+            135deg,
+            #f9f8f2 0%,
+            #efe2a9 55%,
+            #f7c978 100%
+        );
+
+    border-color: rgba(0,0,0,.08);
+
+    box-shadow:
+        inset 0 2px 8px rgba(255,255,255,.48),
+        inset 0 -10px 18px rgba(0,0,0,.12),
+        0 10px 28px rgba(0,0,0,.14);
+}
+
+
+body.light .theme-toggle::before {
+    opacity: .85;
+
+    transform: translateX(-18px);
+}
+
+
+/* Light mode = head on the left */
+
+body.light .theme-toggle-head {
+    transform: translateX(0);
+
+    box-shadow:
+        0 7px 16px rgba(0,0,0,.18),
+        0 0 0 2px rgba(255,255,255,.7);
+}
+
+
+/* Moon disappears */
+
+body.light .dark-toggle-icon {
+    opacity: 0;
+
+    transform:
+        rotate(90deg)
+        scale(.78);
+}
+
+
+/* Sun appears */
+
+body.light .light-toggle-icon {
+    opacity: 1;
+
+    transform:
+        rotate(0deg)
+        scale(1);
+}
+
+
+/* Press */
+
 .theme-toggle:active {
     transform: scale(.93);
 }
