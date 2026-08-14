@@ -807,9 +807,11 @@ body.light .light-toggle-icon {
 }
 
 .history-icon {
-    width: 22px;
-    height: 22px;
+    width: 30px;
+    height: 30px;
+
     object-fit: contain;
+
     display: block;
 }
 
