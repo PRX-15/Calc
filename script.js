@@ -1759,10 +1759,17 @@ function applyTheme(theme) {
         );
 
 
-    themeButton.textContent =
-        isLight
-            ? "☾"
-            : "☼";
+    themeButton.setAttribute(
+    "aria-label",
+    isLight
+        ? "Switch to dark mode"
+        : "Switch to light mode"
+);
+
+themeButton.setAttribute(
+    "aria-pressed",
+    String(isLight)
+);
 }
 
 
