@@ -153,7 +153,7 @@ header {
 .theme-toggle {
     position: relative;
 
-    width: 88px;
+    width: 66px;
     height: 36px;
 
     padding: 3px;
@@ -235,7 +235,7 @@ header {
 
     pointer-events: none;
 
-    transform: translateX(52px);
+    transform: translateX(30px);
 
     transition:
         transform .68s cubic-bezier(.22,1,.36,1),
