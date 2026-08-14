@@ -46,11 +46,26 @@
 
             <button
     type="button"
-    class="round-button"
+    class="theme-toggle"
     id="themeButton"
-    aria-label="Toggle theme"
+    aria-label="Switch to light mode"
+    aria-pressed="false"
 >
-    ☼
+    <span
+        class="theme-toggle-head"
+        aria-hidden="true"
+    >
+        <img
+            src="Images/dark-light-toggle/light-toggle.png"
+            alt=""
+            class="theme-toggle-icon light-toggle-icon"
+        >
+        <img
+            src="Images/dark-light-toggle/dark-toggle.png"
+            alt=""
+            class="theme-toggle-icon dark-toggle-icon"
+        >
+    </span>
 </button>
 
             <button
