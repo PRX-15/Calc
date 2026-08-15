@@ -807,12 +807,34 @@ body.light .light-toggle-icon {
     grid-column: span 2;
 }
 
+/* =========================
+   HISTORY ICON
+========================= */
+
 .history-icon {
     width: 36px;
     height: 36px;
 
     object-fit: contain;
 
+    display: block;
+}
+
+/* Dark icon is visible by default */
+.history-icon-dark {
+    display: block;
+}
+
+.history-icon-light {
+    display: none;
+}
+
+/* Light mode uses the dedicated light icon */
+body.light .history-icon-dark {
+    display: none;
+}
+
+body.light .history-icon-light {
     display: block;
 }
 
