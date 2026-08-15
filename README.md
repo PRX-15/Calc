@@ -13,10 +13,16 @@ A mobile-first calculator focused on a clean interface, fast input, useful calcu
 
 ### 📱 Interface
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/0a865821-2dd4-4383-a364-31c3f6f27f2a" width="250">
-  <img src="https://github.com/user-attachments/assets/2f110788-a4f7-41a2-ae55-856f702271ec" width="250">
-</div>
+<table>
+  <tr>
+    <td>
+      <img src="https://github.com/user-attachments/assets/0a865821-2dd4-4383-a364-31c3f6f27f2a" width="250">
+    </td>
+    <td>
+      <img src="https://github.com/user-attachments/assets/2f110788-a4f7-41a2-ae55-856f702271ec" width="250">
+    </td>
+  </tr>
+</table>
 
 
 
