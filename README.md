@@ -39,3 +39,38 @@ A mobile-first calculator focused on a clean interface, fast input, useful calcu
 
 Calc has dedicated dark and light themes with a custom sliding theme switch.
 
+## ✨ Features
+
+- **🧮 Full Calculator Operations**
+  - Addition `+`
+  - Subtraction `−`
+  - Multiplication `×`
+  - Division `÷`
+  - Decimals
+  - Parentheses and grouped expressions `( )`
+  - Percentage `%`
+  - Square root `√`
+  - Positive/negative toggle `±`
+  - Clear `AC`
+  - Delete `⌫`
+  - Cursor-based expression editing
+  - Live result preview
+  - Operator precedence
+  - Negative values and nested expressions
+
+- **📋 Copy Result**
+  - Copy the current result directly to the clipboard
+
+- **🕒 Calculation History**
+  - Automatically saves completed calculations
+  - Stores expressions, results and timestamps
+  - Delete individual calculations
+  - Clear the entire history
+  - History persists between sessions
+
+- **📱 Mobile-Focused Experience**
+  - Responsive layout
+  - Touch-friendly controls
+  - Button press animations
+  - Haptic feedback on supported devices
+  - Installable as a PWA
