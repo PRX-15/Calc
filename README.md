@@ -26,7 +26,8 @@ A mobile-first calculator focused on a clean interface, fast input, useful calcu
 
 
 
-<img width="250" height="2546" alt="IMG_20260815_104307" src="https://github.com/user-attachments/assets/f47a6b83-f285-49a5-846a-502264fbc691" />
+<img width="250"
+ alt="IMG_20260815_104307" src="https://github.com/user-attachments/assets/f47a6b83-f285-49a5-846a-502264fbc691" />
 
 </div>
 
