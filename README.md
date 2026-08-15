@@ -7,7 +7,7 @@
 A mobile-first calculator focused on a clean interface, fast input, useful calculation history, and polished dark/light themes.
 
 
-**[Open Calc](https://prx-15.github.io/Calc/)**
+**[Open CALC](https://prx-15.github.io/Calc/)**
 
 ---
 
